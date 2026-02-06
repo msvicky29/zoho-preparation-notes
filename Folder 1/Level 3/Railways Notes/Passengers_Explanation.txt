@@ -1,0 +1,16 @@
+
+Passengers.java Explanation
+
+This Java class represents a passenger in the railway reservation system.
+
+Attributes:
+- static int id: A static integer used to generate unique passenger IDs.
+- String name: The name of the passenger.
+- String berthPref: The berth preference of the passenger.
+- int age: The age of the passenger.
+- int passengerId: The unique ID of the passenger.
+- String alloted: The allotted berth status.
+- int number: An integer used to store additional passenger information.
+
+Constructor:
+- Passengers(String name, int age, String berthPref): Initializes the passenger's name, age, berth preference, and assigns a unique ID.

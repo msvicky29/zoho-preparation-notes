@@ -1,0 +1,20 @@
+
+TicketBooker.java Explanation
+
+This Java class handles the booking and cancellation logic for the railway reservation system.
+
+Attributes:
+- Various attributes representing available berths, RAC (Reservation Against Cancellation) tickets, and waiting lists.
+- Data structures like lists and maps to manage passengers and their statuses.
+
+Methods:
+- bookTicket(Passengers p, String alloted, int number): Books a ticket for a passenger, updating their status and the available tickets.
+- addToRAC(Passengers p): Adds a passenger to the RAC list.
+- addToWaitingList(Passengers p): Adds a passenger to the waiting list.
+- cancelTicket(int id): Cancels a ticket, updating the status of RAC and waiting list passengers accordingly.
+- printAvailTickets(): Prints the available tickets.
+- printPassengers(): Prints the details of all passengers.
+
+Usage Summary:
+- The TicketBooker class is responsible for managing the core logic of booking and cancelling tickets within the railway reservation system.
+- It interacts with the Passengers class to handle individual passenger data and uses internal data structures to keep track of ticket availability and passenger statuses.

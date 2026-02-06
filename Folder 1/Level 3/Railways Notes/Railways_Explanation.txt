@@ -1,0 +1,58 @@
+
+Railways.java Explanation
+
+This Java class serves as the main interface for a railway reservation system, enabling users to book tickets, view passenger details, check available tickets, and cancel reservations.
+
+Main Structure:
+1. Main Method:
+    - Continuously runs a loop allowing the user to select different options:
+      - 1. Booking
+      - 2. Passengers
+      - 3. Available Tickets
+      - 4. Cancel
+      - 5. Exit
+    - Based on the user's choice, it calls the appropriate method.
+
+2. Methods:
+    - bookTicket(): Handles booking logic for a passenger.
+    - cancelTicket(int id): Cancels the ticket for a passenger based on the provided ID.
+    - suggestBerth(Passengers p): Suggests available berths if the preferred one is not available.
+    - racBookTicket(Passengers p): Books a ticket for a passenger on RAC (Reservation Against Cancellation) or suggests available options.
+
+Detailed Method Breakdown:
+
+1. main Method:
+    - A while (true) loop runs indefinitely, providing a menu for the user.
+    - The switch statement handles the user's input:
+        - case 1: Calls bookTicket() for ticket booking.
+        - case 2: Creates a TicketBooker object and calls printPassengers() to display passenger details.
+        - case 3: Creates a TicketBooker object and calls printAvailTickets() to display available tickets.
+        - case 4: Asks for a passenger ID and calls cancelTicket(id) to cancel the ticket.
+        - case 5: Exits the program.
+        - default: Handles invalid inputs.
+
+2. bookTicket():
+    - Prompts the user to enter passenger details (name, age, berth preference).
+    - Creates a Passengers object with the entered details.
+    - Checks ticket availability and assigns a berth based on the preference. If the preferred berth is not available, it calls suggestBerth(p).
+    - If no tickets are available, it adds the passenger to RAC or waiting list.
+
+3. cancelTicket(int id):
+    - Checks if a passenger with the given ID exists.
+    - If yes, it creates a TicketBooker object and calls cancelTicket(id).
+    - If no, it prints "No Such user found".
+
+4. suggestBerth(Passengers p):
+    - Lists available berths and prompts the user to choose one.
+    - Books a ticket based on the user's choice.
+
+5. racBookTicket(Passengers p):
+    - Checks if the preferred berth is available. If yes, it books the ticket.
+    - If the preferred berth is not available, it assigns the first available berth or adds the passenger to RAC or waiting list based on availability.
+
+Usage Summary:
+- The Railways class is the entry point for interacting with the railway reservation system.
+- It utilizes the TicketBooker class to handle core booking and cancellation logic.
+- The Passengers class is used to represent individual passengers in the system.
+
+This setup allows for a modular approach where the Railways class handles user interactions, and the TicketBooker class manages the business logic.
