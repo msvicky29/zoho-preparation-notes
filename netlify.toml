@@ -1,0 +1,13 @@
+# Netlify configuration for PDF preview in iframe
+[[headers]]
+  for = "*.pdf"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Type = "application/pdf"
+    Content-Disposition = "inline"
+
+# Allow all static assets
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
