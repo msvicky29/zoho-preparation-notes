@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zoho Preparation Kit — Document Index</title>
+    <style>
+        /* ========== RESET / BASE ========== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --surface: #f5f3ef;
+            --paper: #ffffff;
+            --ink: #1d1d1f;
+            --muted: #6b6b6f;
+            --accent: #2563eb;
+            --accent-soft: #eff6ff;
+            --border: #e5e2dc;
+            --tag-pdf: #dc2626;
+            --tag-pdf-bg: #fef2f2;
+            --tag-img: #7c3aed;
+            --tag-img-bg: #f5f3ff;
+            --tag-doc: #0891b2;
+            --tag-doc-bg: #ecfeff;
+            --tag-zip: #ca8a04;
+            --tag-zip-bg: #fefce8;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.06);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--surface);
+            color: var(--ink);
+            line-height: 1.6;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ========== HEADER ========== */
+        .page-header {
+            background: var(--paper);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 1.5rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .page-header__inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .page-header h1 small {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--muted);
+            margin-left: auto;
+        }
+
+        .page-header__meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.25rem;
+            margin-top: 0.6rem;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .page-header__meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        /* ========== PROFILE BAR ========== */
+        .profile-bar {
+            max-width: 1200px;
+            margin: 0.75rem auto 0;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem 1.25rem;
+        }
+
+        .profile-bar__brand {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .profile-bar__brand svg {
+            flex-shrink: 0;
+        }
+
+        .profile-bar__links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .profile-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 0.3rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: var(--paper);
+            transition: all 0.2s;
+        }
+
+        .profile-link:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        .profile-link svg {
+            flex-shrink: 0;
+        }
+
+        .profile-bar__follow {
+            font-size: 0.75rem;
+            color: var(--muted);
+            font-weight: 500;
+            margin-left: auto;
+        }
+
+        /* ========== FILTER BAR ========== */
+        .filter-bar {
+            max-width: 1200px;
+            margin: 1rem auto 0;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .filter-bar label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-right: 0.25rem;
+        }
+
+        .filter-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 0.35rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--ink);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .filter-btn .count {
+            display: inline-block;
+            background: rgba(0,0,0,0.08);
+            border-radius: 999px;
+            padding: 0 0.45rem;
+            font-size: 0.7rem;
+            margin-left: 0.25rem;
+            font-weight: 600;
+        }
+
+        .filter-btn.active .count {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* ========== TAG BAR ========== */
+        .tag-bar {
+            max-width: 1200px;
+            margin: 0.75rem auto 0;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            align-items: center;
+        }
+
+        .tag-bar label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-right: 0.15rem;
+        }
+
+        .tag-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.25rem 0.7rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tag-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        .tag-btn.active {
+            background: var(--ink);
+            border-color: var(--ink);
+            color: #fff;
+        }
+
+        .tag-btn .count {
+            display: inline-block;
+            background: rgba(0,0,0,0.08);
+            border-radius: 4px;
+            padding: 0 0.35rem;
+            font-size: 0.65rem;
+            margin-left: 0.2rem;
+            font-weight: 600;
+        }
+
+        .tag-btn.active .count {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* ========== SEARCH ========== */
+        .search-wrapper {
+            max-width: 1200px;
+            margin: 0.75rem auto 0;
+            padding: 0 1.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.7rem 1rem;
+            font-size: 0.9rem;
+            background: var(--paper);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+
+        /* ========== MAIN ========== */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        /* ========== SECTION ========== */
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.15rem;
+            font-weight: 650;
+            letter-spacing: -0.01em;
+        }
+
+        .section-header .pill {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.15rem 0.6rem;
+            border-radius: 999px;
+        }
+
+        .pill--pdf {
+            background: var(--tag-pdf-bg);
+            color: var(--tag-pdf);
+        }
+        .pill--image {
+            background: var(--tag-img-bg);
+            color: var(--tag-img);
+        }
+        .pill--doc {
+            background: var(--tag-doc-bg);
+            color: var(--tag-doc);
+        }
+        .pill--zip {
+            background: var(--tag-zip-bg);
+            color: var(--tag-zip);
+        }
+        .pill--other {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        /* ========== FOLDER LABEL ========== */
+        .folder-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin: 1.25rem 0 0.5rem;
+            padding: 0.25rem 0.75rem;
+            background: var(--paper);
+            border-radius: 6px;
+            display: inline-block;
+            border: 1px solid var(--border);
+        }
+
+        /* ========== GRID ========== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 0.75rem;
+        }
+
+        /* ========== CARD ========== */
+        .card {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.85rem 1rem;
+            transition: box-shadow 0.2s, transform 0.15s;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            cursor: default;
+            box-shadow: var(--shadow);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .card__icon {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .card__icon--pdf {
+            background: var(--tag-pdf-bg);
+            color: var(--tag-pdf);
+        }
+        .card__icon--image {
+            background: var(--tag-img-bg);
+            color: var(--tag-img);
+        }
+        .card__icon--doc {
+            background: var(--tag-doc-bg);
+            color: var(--tag-doc);
+        }
+        .card__icon--zip {
+            background: var(--tag-zip-bg);
+            color: var(--tag-zip);
+        }
+        .card__icon--other {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .card__body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .card__name {
+            font-size: 0.88rem;
+            font-weight: 550;
+            word-break: break-word;
+            line-height: 1.3;
+        }
+
+        .card__name a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .card__name a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        .card__meta {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 0.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem 0.5rem;
+        }
+
+        .card__tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.1rem 0.45rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .card__tag--pdf {
+            background: var(--tag-pdf-bg);
+            color: var(--tag-pdf);
+        }
+        .card__tag--jpg, .card__tag--jpeg, .card__tag--png {
+            background: var(--tag-img-bg);
+            color: var(--tag-img);
+        }
+        .card__tag--docx {
+            background: var(--tag-doc-bg);
+            color: var(--tag-doc);
+        }
+        .card__tag--zip {
+            background: var(--tag-zip-bg);
+            color: var(--tag-zip);
+        }
+
+        .card__topic-tag {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 0.05rem 0.4rem;
+            border-radius: 3px;
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .card__topic-tag--aptitude { background: #fef3c7; color: #92400e; }
+        .card__topic-tag--dsa { background: #dbeafe; color: #1e40af; }
+        .card__topic-tag--level2 { background: #d1fae5; color: #065f46; }
+        .card__topic-tag--level3 { background: #ede9fe; color: #5b21b6; }
+        .card__topic-tag--lld { background: #fce7f3; color: #9d174d; }
+        .card__topic-tag--important { background: #fee2e2; color: #991b1b; }
+
+        /* ========== EMPTY STATE ========== */
+        .empty {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--muted);
+        }
+
+        .empty p {
+            font-size: 0.95rem;
+        }
+
+        /* ========== FOOTER ========== */
+        .page-footer {
+            max-width: 1200px;
+            margin: 2rem auto 0;
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 640px) {
+            .page-header {
+                padding: 1.25rem 1rem;
+            }
+            .page-header h1 {
+                font-size: 1.25rem;
+                flex-wrap: wrap;
+            }
+            .page-header h1 small {
+                margin-left: 0;
+                width: 100%;
+            }
+            .main {
+                padding: 1rem;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .filter-bar, .tag-bar, .search-wrapper, .profile-bar {
+                padding: 0 1rem;
+            }
+            .filter-bar {
+                gap: 0.35rem;
+            }
+            .filter-btn {
+                font-size: 0.75rem;
+                padding: 0.3rem 0.75rem;
+            }
+            .profile-bar__follow {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+
+        /* ========== SKIP LINK ========== */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            background: var(--ink);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            z-index: 100;
+            text-decoration: none;
+        }
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* ========== HIDDEN ========== */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to documents</a>
+
+<!-- ===== HEADER ===== -->
+<header class="page-header" role="banner">
+    <div class="page-header__inner">
+        <h1>
+            <span>Zoho Preparation Kit</span>
+            <small>Document Index</small>
+        </h1>
+        <div class="page-header__meta">
+            <span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <span id="total-count">0</span> documents
+            </span>
+            <span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                <span id="folder-count">0</span> folders
+            </span>
+            <span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span id="date-display"></span>
+            </span>
+        </div>
+    </div>
+</header>
+
+<!-- ===== PROFILE BAR ===== -->
+<div class="profile-bar">
+    <span class="profile-bar__brand">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        My Saved Docs
+    </span>
+    <div class="profile-bar__links">
+        <a class="profile-link" href="https://www.linkedin.com/in/vigneswaraa/" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+        </a>
+        <a class="profile-link" href="https://github.com/msvicky29" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+        </a>
+        <a class="profile-link" href="https://itsmevicky.netlify.app" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Portfolio
+        </a>
+    </div>
+    <span class="profile-bar__follow">Follow me &rarr;</span>
+</div>
+
+<!-- ===== FILTER BAR ===== -->
+<nav class="filter-bar" role="tablist" aria-label="Filter by document type">
+    <label>Type:</label>
+    <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">All <span class="count" id="count-all">0</span></button>
+    <button class="filter-btn" data-filter="pdf" role="tab">PDFs <span class="count" id="count-pdf">0</span></button>
+    <button class="filter-btn" data-filter="image" role="tab">Images <span class="count" id="count-image">0</span></button>
+    <button class="filter-btn" data-filter="doc" role="tab">Documents <span class="count" id="count-doc">0</span></button>
+    <button class="filter-btn" data-filter="zip" role="tab">Archives <span class="count" id="count-zip">0</span></button>
+    <button class="filter-btn" data-filter="other" role="tab">Other <span class="count" id="count-other">0</span></button>
+</nav>
+
+<!-- ===== TOPIC TAG BAR ===== -->
+<nav class="tag-bar" aria-label="Filter by topic">
+    <label>Topic:</label>
+    <button class="tag-btn" data-tag="aptitude">Aptitude <span class="count">0</span></button>
+    <button class="tag-btn" data-tag="dsa">DSA <span class="count">0</span></button>
+    <button class="tag-btn" data-tag="level2">Level 2 <span class="count">0</span></button>
+    <button class="tag-btn" data-tag="level3">Level 3 <span class="count">0</span></button>
+    <button class="tag-btn" data-tag="lld">LLD Ques <span class="count">0</span></button>
+    <button class="tag-btn" data-tag="important">Important <span class="count">0</span></button>
+</nav>
+
+<!-- ===== SEARCH ===== -->
+<div class="search-wrapper">
+    <input class="search-input" type="search" id="search" placeholder="Search by filename…" aria-label="Search documents by filename" />
+</div>
+
+<!-- ===== MAIN ===== -->
+<main class="main" id="main-content" role="main">
+    <div id="sections-container"></div>
+    <div id="empty-state" class="empty hidden">
+        <p>No documents match the current filter.</p>
+    </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="page-footer" role="contentinfo">
+    <span>Zoho Preparation Kit &mdash; document hub</span>
+    <span>Built for quick reference &middot; <span id="footer-count">0</span> files indexed</span>
+</footer>
+
+<script>
+// ============================================================
+//  DATA — All files discovered in the repository
+//  Each entry: { name, path, folder, topics: [] }
+//  topics: 'aptitude', 'dsa', 'level2', 'level3', 'lld', 'important'
+// ============================================================
+
+const DOCUMENTS = {
+    pdf: [
+        // Folder 1 root
+        { name: "5_6084761660952674926.pdf", path: "Folder 1/5_6084761660952674926.pdf", folder: "Folder 1", topics: [] },
+        { name: "Ball Brick.pdf", path: "Folder 1/Ball Brick.pdf", folder: "Folder 1", topics: ["level2"] },
+        { name: "Envelope - Zoho Interview Process.pdf", path: "Folder 1/Envelope - Zoho Interview Process.pdf", folder: "Folder 1", topics: ["important"] },
+        { name: "gokul-s-zoho-corp-interview-experience-batch-2025.pdf", path: "Folder 1/gokul-s-zoho-corp-interview-experience-batch-2025.pdf", folder: "Folder 1", topics: ["important"] },
+        { name: "Zoho CheatSheet.pdf", path: "Folder 1/Zoho CheatSheet.pdf", folder: "Folder 1", topics: ["important"] },
+        { name: "ZOHO Interview Preparation Guide.pdf", path: "Folder 1/ZOHO Interview Preparation Guide.pdf", folder: "Folder 1", topics: ["important"] },
+        { name: "ZOHO Interview Sets Freshers _ TOAZ.INFO.pdf", path: "Folder 1/ZOHO Interview Sets Freshers _ TOAZ.INFO.pdf", folder: "Folder 1", topics: ["important"] },
+        { name: "Zoho jan6 interview.pdf", path: "Folder 1/Zoho jan6 interview.pdf", folder: "Folder 1", topics: ["important"] },
+        { name: "Zoho Placement Paper.pdf", path: "Folder 1/Zoho Placement Paper.pdf", folder: "Folder 1", topics: ["aptitude", "important"] },
+        { name: "Zoho R1-03.pdf", path: "Folder 1/Zoho R1-03.pdf", folder: "Folder 1", topics: [] },
+        { name: "zoho-second-round-interview-qeustions.pdf", path: "Folder 1/zoho-second-round-interview-qeustions.pdf", folder: "Folder 1", topics: ["level2", "important"] },
+        // Folder 1 / Level 1
+        { name: "C Programming Multiple choice questions.pdf", path: "Folder 1/Level 1/C Programming Multiple choice questions.pdf", folder: "Folder 1/Level 1", topics: ["aptitude"] },
+        { name: "C++ Aptitude only.pdf", path: "Folder 1/Level 1/C++ Aptitude only.pdf", folder: "Folder 1/Level 1", topics: ["aptitude"] },
+        { name: "Data Types  and Loops Java (2).pdf", path: "Folder 1/Level 1/Data Types  and Loops Java (2).pdf", folder: "Folder 1/Level 1", topics: ["aptitude"] },
+        { name: "interview-questions.pdf", path: "Folder 1/Level 1/interview-questions.pdf", folder: "Folder 1/Level 1", topics: ["important"] },
+        { name: "JAVA APTITUDE .pdf", path: "Folder 1/Level 1/JAVA APTITUDE .pdf", folder: "Folder 1/Level 1", topics: ["aptitude"] },
+        { name: "L1  Programming.pdf", path: "Folder 1/Level 1/L1  Programming.pdf", folder: "Folder 1/Level 1", topics: [] },
+        { name: "Level 1 Questions.pdf", path: "Folder 1/Level 1/Level 1 Questions.pdf", folder: "Folder 1/Level 1", topics: [] },
+        { name: "One Word.pdf", path: "Folder 1/Level 1/One Word.pdf", folder: "Folder 1/Level 1", topics: ["aptitude"] },
+        { name: "TwoWord.pdf", path: "Folder 1/Level 1/TwoWord.pdf", folder: "Folder 1/Level 1", topics: ["aptitude"] },
+        { name: "xdYiBMS1a17FWt3vYQUJWR.pdf", path: "Folder 1/Level 1/xdYiBMS1a17FWt3vYQUJWR.pdf", folder: "Folder 1/Level 1", topics: [] },
+        { name: "Zoho (4th may question) .pdf", path: "Folder 1/Level 1/Zoho (4th may question) .pdf", folder: "Folder 1/Level 1", topics: ["important"] },
+        { name: "ZOHO - SET 20.pdf", path: "Folder 1/Level 1/ZOHO - SET 20.pdf", folder: "Folder 1/Level 1", topics: [] },
+        { name: "ZOHO - SET 7.pdf", path: "Folder 1/Level 1/ZOHO - SET 7.pdf", folder: "Folder 1/Level 1", topics: [] },
+        { name: "Zoho jan6 interview.pdf", path: "Folder 1/Level 1/Zoho jan6 interview.pdf", folder: "Folder 1/Level 1", topics: ["important"] },
+        { name: "Zoho Level 1 Sample Paper 1.pdf", path: "Folder 1/Level 1/Zoho Level 1 Sample Paper 1.pdf", folder: "Folder 1/Level 1", topics: [] },
+        { name: "Zoho R1-03.pdf", path: "Folder 1/Level 1/Zoho R1-03.pdf", folder: "Folder 1/Level 1", topics: [] },
+        { name: "zoho Round 1 c aptitude part1 - Copy.pdf", path: "Folder 1/Level 1/zoho Round 1 c aptitude part1 - Copy.pdf", folder: "Folder 1/Level 1", topics: ["aptitude"] },
+        { name: "zoho Round 1 c aptitude part1.pdf", path: "Folder 1/Level 1/zoho Round 1 c aptitude part1.pdf", folder: "Folder 1/Level 1", topics: ["aptitude"] },
+        // Folder 1 / Level 2
+        { name: "100.pdf", path: "Folder 1/Level 2/100.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "5.pdf", path: "Folder 1/Level 2/5.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "6.pdf", path: "Folder 1/Level 2/6.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "7.pdf", path: "Folder 1/Level 2/7.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "8.pdf", path: "Folder 1/Level 2/8.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "All Session Programs with solutins.pdf", path: "Folder 1/Level 2/All Session Programs with solutins.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Arrays Important Basic(leetcode) DSA Questions.pdf", path: "Folder 1/Level 2/Arrays Important Basic(leetcode) DSA Questions.pdf", folder: "Folder 1/Level 2", topics: ["dsa", "level2", "important"] },
+        { name: "aug 21_level 2.pdf", path: "Folder 1/Level 2/aug 21_level 2.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Dynamic Programming .pdf", path: "Folder 1/Level 2/Dynamic Programming .pdf", folder: "Folder 1/Level 2", topics: ["dsa", "level2"] },
+        { name: "Level 2 Practice set 1.pdf", path: "Folder 1/Level 2/Level 2 Practice set 1.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Level 2 Session 27.pdf", path: "Folder 1/Level 2/Level 2 Session 27.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Matrics (2D) Array zoho samle questions.pdf", path: "Folder 1/Level 2/Matrics (2D) Array zoho samle questions.pdf", folder: "Folder 1/Level 2", topics: ["dsa", "level2"] },
+        { name: "regex-matcher-1-English.pdf", path: "Folder 1/Level 2/regex-matcher-1-English.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Software_developer question 2022.pdf", path: "Folder 1/Level 2/Software_developer question 2022.pdf", folder: "Folder 1/Level 2", topics: ["level2", "important"] },
+        { name: "Top Leetcode Questions (Zoho,Amazon,linkedin,google).pdf", path: "Folder 1/Level 2/Top Leetcode Questions (Zoho,Amazon,linkedin,google).pdf", folder: "Folder 1/Level 2", topics: ["dsa", "level2", "important"] },
+        { name: "ZOHO 2nd ROUND 2nd half.pdf", path: "Folder 1/Level 2/ZOHO 2nd ROUND 2nd half.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Zoho DSA 50.pdf", path: "Folder 1/Level 2/Zoho DSA 50.pdf", folder: "Folder 1/Level 2", topics: ["dsa", "level2"] },
+        { name: "Zoho Dynamic Programming Questions.pdf", path: "Folder 1/Level 2/Zoho Dynamic Programming Questions.pdf", folder: "Folder 1/Level 2", topics: ["dsa", "level2"] },
+        { name: "Zoho Placement Paper.pdf", path: "Folder 1/Level 2/Zoho Placement Paper.pdf", folder: "Folder 1/Level 2", topics: ["level2", "aptitude"] },
+        { name: "Zoho Practice Set - 1  .pdf", path: "Folder 1/Level 2/Zoho Practice Set - 1  .pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Zoho Practice set 2.pdf", path: "Folder 1/Level 2/Zoho Practice set 2.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Zoho practice set 3 .pdf", path: "Folder 1/Level 2/Zoho practice set 3 .pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Zoho practice set 4.pdf", path: "Folder 1/Level 2/Zoho practice set 4.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Zoho practice set 5.pdf", path: "Folder 1/Level 2/Zoho practice set 5.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Zoho practice set 6.pdf", path: "Folder 1/Level 2/Zoho practice set 6.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Zoho Practice Set 7.pdf", path: "Folder 1/Level 2/Zoho Practice Set 7.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Zoho Practice Set 8.pdf", path: "Folder 1/Level 2/Zoho Practice Set 8.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Zoho Recent Exam Questions and Answers.pdf", path: "Folder 1/Level 2/Zoho Recent Exam Questions and Answers.pdf", folder: "Folder 1/Level 2", topics: ["level2", "important"] },
+        { name: "zoho-level-2-set-qa.pdf", path: "Folder 1/Level 2/zoho-level-2-set-qa.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "zoho-second-round-interview-qeustions.pdf", path: "Folder 1/Level 2/zoho-second-round-interview-qeustions.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "zoho2.pdf", path: "Folder 1/Level 2/zoho2.pdf", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Zoho_coding_questions_with_answers_2023_zoho_previous_year_programming.PDF", path: "Folder 1/Level 2/Zoho_coding_questions_with_answers_2023_zoho_previous_year_programming.PDF", folder: "Folder 1/Level 2", topics: ["level2", "important"] },
+        // Folder 1 / Level 3
+        { name: "Application dev.pdf", path: "Folder 1/Level 3/Application dev.pdf", folder: "Folder 1/Level 3", topics: ["level3", "lld"] },
+        { name: "L3 Question (2).pdf", path: "Folder 1/Level 3/L3 Question (2).pdf", folder: "Folder 1/Level 3", topics: ["level3"] },
+        { name: "Level 3 Sample paper 1.pdf", path: "Folder 1/Level 3/Level 3 Sample paper 1.pdf", folder: "Folder 1/Level 3", topics: ["level3"] },
+        { name: "Mail Management System.pdf", path: "Folder 1/Level 3/Mail Management System.pdf", folder: "Folder 1/Level 3", topics: ["level3", "lld"] },
+        { name: "OnlineMovieBookingApp.pdf", path: "Folder 1/Level 3/OnlineMovieBookingApp.pdf", folder: "Folder 1/Level 3", topics: ["level3", "lld"] },
+        { name: "Train ticket application working code .pdf", path: "Folder 1/Level 3/Train ticket application working code .pdf", folder: "Folder 1/Level 3", topics: ["level3", "lld"] },
+        { name: "Train.pdf", path: "Folder 1/Level 3/Train.pdf", folder: "Folder 1/Level 3", topics: ["level3", "lld"] },
+        { name: "zoho-round-3-question-set_compress.pdf", path: "Folder 1/Level 3/zoho-round-3-question-set_compress.pdf", folder: "Folder 1/Level 3", topics: ["level3"] },
+        // Folder 1 / New folder
+        { name: "Kirubakaran's Resume (1)_updated.pdf", path: "Folder 1/New folder/Kirubakaran's Resume (1)_updated.pdf", folder: "Folder 1/New folder", topics: [] },
+        { name: "My_Resume (1) (1).pdf", path: "Folder 1/New folder/My_Resume (1) (1).pdf", folder: "Folder 1/New folder", topics: [] },
+        { name: "Siva_Prakash (1).pdf", path: "Folder 1/New folder/Siva_Prakash (1).pdf", folder: "Folder 1/New folder", topics: [] },
+        // Folder 2 Previous Year Questions
+        { name: "Level 2 Practice set 1 (2).pdf", path: "Folder 2/Previous Year Questions/Level 2 Practice set 1 (2).pdf", folder: "Folder 2/Previous Year Questions", topics: ["level2"] },
+        { name: "Level 2 Practice set 1.pdf", path: "Folder 2/Previous Year Questions/Level 2 Practice set 1.pdf", folder: "Folder 2/Previous Year Questions", topics: ["level2"] },
+        { name: "Level 3 Sample paper 1.pdf", path: "Folder 2/Previous Year Questions/Level 3 Sample paper 1.pdf", folder: "Folder 2/Previous Year Questions", topics: ["level3"] },
+        { name: "Placement Material Aptitude.pdf", path: "Folder 2/Previous Year Questions/Placement Material Aptitude.pdf", folder: "Folder 2/Previous Year Questions", topics: ["aptitude"] },
+        { name: "Zoho Level 1 Sample Paper 1.pdf", path: "Folder 2/Previous Year Questions/Zoho Level 1 Sample Paper 1.pdf", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "ZOHO QUESTIONS PDF[1].pdf", path: "Folder 2/Previous Year Questions/ZOHO QUESTIONS PDF[1].pdf", folder: "Folder 2/Previous Year Questions", topics: ["important"] },
+        { name: "ZohoQuestion31.12.2024-11.03.2024-april.pdf", path: "Folder 2/Previous Year Questions/ZohoQuestion31.12.2024-11.03.2024-april.pdf", folder: "Folder 2/Previous Year Questions", topics: ["important"] },
+        // Folder 3
+        { name: "brick and ball zoho.pdf", path: "Folder 3/brick and ball zoho.pdf", folder: "Folder 3", topics: ["level2"] },
+        { name: "ilide.info-zoho-2nd-and-3rd-round-coding-questions-pr_25a1b050986805d541fdd90c4e88702d.pdf", path: "Folder 3/ilide.info-zoho-2nd-and-3rd-round-coding-questions-pr_25a1b050986805d541fdd90c4e88702d.pdf", folder: "Folder 3", topics: ["level2", "level3", "important"] },
+        { name: "Matrics (2D) Array zoho samle questions.pdf", path: "Folder 3/Matrics (2D) Array zoho samle questions.pdf", folder: "Folder 3", topics: ["dsa"] },
+        { name: "Mostly asked questions in Zoho.pdf", path: "Folder 3/Mostly asked questions in Zoho.pdf", folder: "Folder 3", topics: ["important"] },
+        { name: "Zoho 2024.pdf", path: "Folder 3/Zoho 2024.pdf", folder: "Folder 3", topics: ["important"] },
+        { name: "Zoho C Snippet 4.7.24.pdf", path: "Folder 3/Zoho C Snippet 4.7.24.pdf", folder: "Folder 3", topics: ["aptitude"] },
+        { name: "Zoho CheatSheet-1.pdf", path: "Folder 3/Zoho CheatSheet-1.pdf", folder: "Folder 3", topics: ["important"] },
+        { name: "Zoho Experience.pdf", path: "Folder 3/Zoho Experience.pdf", folder: "Folder 3", topics: ["important"] },
+        { name: "Zoho jan6 interview-1.pdf", path: "Folder 3/Zoho jan6 interview-1.pdf", folder: "Folder 3", topics: ["important"] },
+        { name: "Zoho jan6 interview.pdf", path: "Folder 3/Zoho jan6 interview.pdf", folder: "Folder 3", topics: ["important"] },
+        { name: "Zoho Level 3 Question.pdf", path: "Folder 3/Zoho Level 3 Question.pdf", folder: "Folder 3", topics: ["level3"] },
+        { name: "Zoho Placement Paper.pdf", path: "Folder 3/Zoho Placement Paper.pdf", folder: "Folder 3", topics: ["aptitude", "important"] },
+        { name: "Zoho programming round 1 batch 2 qp.pdf", path: "Folder 3/Zoho programming round 1 batch 2 qp.pdf", folder: "Folder 3", topics: [] },
+        { name: "Zoho programming round batch 1 qp.pdf", path: "Folder 3/Zoho programming round batch 1 qp.pdf", folder: "Folder 3", topics: [] },
+        { name: "Zoho qn.pdf", path: "Folder 3/Zoho qn.pdf", folder: "Folder 3", topics: [] },
+        { name: "Zoho QP.pdf", path: "Folder 3/Zoho QP.pdf", folder: "Folder 3", topics: [] },
+        { name: "Zoho Question Set - 1  .pdf", path: "Folder 3/Zoho Question Set - 1  .pdf", folder: "Folder 3", topics: [] },
+        { name: "Zoho Question Set - 2 .pdf", path: "Folder 3/Zoho Question Set - 2 .pdf", folder: "Folder 3", topics: [] },
+        { name: "Zoho Question Set - 3 .pdf", path: "Folder 3/Zoho Question Set - 3 .pdf", folder: "Folder 3", topics: [] },
+        { name: "Zoho Question Set - 4 .pdf", path: "Folder 3/Zoho Question Set - 4 .pdf", folder: "Folder 3", topics: [] },
+        { name: "Zoho Question Set - 5 .pdf", path: "Folder 3/Zoho Question Set - 5 .pdf", folder: "Folder 3", topics: [] },
+        { name: "Zoho Question Set - 6 .pdf", path: "Folder 3/Zoho Question Set - 6 .pdf", folder: "Folder 3", topics: [] },
+        { name: "Zoho Question Set - 7 .pdf", path: "Folder 3/Zoho Question Set - 7 .pdf", folder: "Folder 3", topics: [] },
+        { name: "Zoho Question Set - 8 .pdf", path: "Folder 3/Zoho Question Set - 8 .pdf", folder: "Folder 3", topics: [] },
+        { name: "zoho Round 1 c aptitude part1.pdf", path: "Folder 3/zoho Round 1 c aptitude part1.pdf", folder: "Folder 3", topics: ["aptitude"] },
+        { name: "ZOHO SET 1.pdf", path: "Folder 3/ZOHO SET 1.pdf", folder: "Folder 3", topics: [] },
+        { name: "ZOHO SET 2.pdf", path: "Folder 3/ZOHO SET 2.pdf", folder: "Folder 3", topics: [] },
+        { name: "ZOHO SET 3.pdf", path: "Folder 3/ZOHO SET 3.pdf", folder: "Folder 3", topics: [] },
+        { name: "ZOHO SET 4.pdf", path: "Folder 3/ZOHO SET 4.pdf", folder: "Folder 3", topics: [] },
+        { name: "ZOHO SET 5.pdf", path: "Folder 3/ZOHO SET 5.pdf", folder: "Folder 3", topics: [] },
+        { name: "zoho set1.pdf", path: "Folder 3/zoho set1.pdf", folder: "Folder 3", topics: [] },
+        { name: "Zoho snippet and apti.pdf", path: "Folder 3/Zoho snippet and apti.pdf", folder: "Folder 3", topics: ["aptitude"] },
+        { name: "ZOHO-1.pdf", path: "Folder 3/ZOHO-1.pdf", folder: "Folder 3", topics: [] },
+        { name: "zoho-2.pdf", path: "Folder 3/zoho-2.pdf", folder: "Folder 3", topics: [] },
+        { name: "zoho-a.pdf", path: "Folder 3/zoho-a.pdf", folder: "Folder 3", topics: [] },
+        { name: "zoho.pdf", path: "Folder 3/zoho.pdf", folder: "Folder 3", topics: [] },
+        { name: "zoho11.pdf", path: "Folder 3/zoho11.pdf", folder: "Folder 3", topics: [] },
+        { name: "zohoadvanceprg.pdf", path: "Folder 3/zohoadvanceprg.pdf", folder: "Folder 3", topics: [] },
+        { name: "zohoset2.pdf", path: "Folder 3/zohoset2.pdf", folder: "Folder 3", topics: [] },
+        // Folder 2 Previous Year Questions PDFs
+        { name: "ilide_info_zoho_2nd_and_3rd_round_coding_questions_pr_b27b372ee.pdf", path: "Folder 2/Previous Year Questions/ilide_info_zoho_2nd_and_3rd_round_coding_questions_pr_b27b372ee.pdf", folder: "Folder 2/Previous Year Questions", topics: ["level2", "level3", "important"] },
+    ],
+    image: [
+        // Folder 1 Level 1
+        { name: "photo_2024-07-13_13-15-47.jpg", path: "Folder 1/Level 1/photo_2024-07-13_13-15-47.jpg", folder: "Folder 1/Level 1", topics: [] },
+        { name: "photo_2024-07-13_13-16-00.jpg", path: "Folder 1/Level 1/photo_2024-07-13_13-16-00.jpg", folder: "Folder 1/Level 1", topics: [] },
+        { name: "photo_2024-07-13_13-16-11.jpg", path: "Folder 1/Level 1/photo_2024-07-13_13-16-11.jpg", folder: "Folder 1/Level 1", topics: [] },
+        { name: "photo_2024-07-13_13-16-24.jpg", path: "Folder 1/Level 1/photo_2024-07-13_13-16-24.jpg", folder: "Folder 1/Level 1", topics: [] },
+        // Folder 1 Level 2
+        { name: "photo_2024-06-08_17-43-39.jpg", path: "Folder 1/Level 2/photo_2024-06-08_17-43-39.jpg", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "photo_2024-08-16_07-40-46.jpg", path: "Folder 1/Level 2/photo_2024-08-16_07-40-46.jpg", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "photo_2024-08-16_07-40-57.jpg", path: "Folder 1/Level 2/photo_2024-08-16_07-40-57.jpg", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "photo_2024-08-16_07-41-04.jpg", path: "Folder 1/Level 2/photo_2024-08-16_07-41-04.jpg", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "photo_2024-08-16_07-41-09.jpg", path: "Folder 1/Level 2/photo_2024-08-16_07-41-09.jpg", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "photo_2024-08-16_08-11-27.jpg", path: "Folder 1/Level 2/photo_2024-08-16_08-11-27.jpg", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "photo_2024-08-16_08-11-44.jpg", path: "Folder 1/Level 2/photo_2024-08-16_08-11-44.jpg", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "photo_2024-08-16_08-11-54.jpg", path: "Folder 1/Level 2/photo_2024-08-16_08-11-54.jpg", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "photo_2024-08-24_07-19-18.jpg", path: "Folder 1/Level 2/photo_2024-08-24_07-19-18.jpg", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "photo_2024-08-24_07-19-33.jpg", path: "Folder 1/Level 2/photo_2024-08-24_07-19-33.jpg", folder: "Folder 1/Level 2", topics: ["level2"] },
+        // Folder 1 pics
+        { name: "photo_2024-04-07_13-29-40.jpg", path: "Folder 1/pics/photo_2024-04-07_13-29-40.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-04-07_13-30-18.jpg", path: "Folder 1/pics/photo_2024-04-07_13-30-18.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-04-07_13-30-24.jpg", path: "Folder 1/pics/photo_2024-04-07_13-30-24.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-04-07_13-30-32.jpg", path: "Folder 1/pics/photo_2024-04-07_13-30-32.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-06-08_17-41-45.jpg", path: "Folder 1/pics/photo_2024-06-08_17-41-45.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-06-08_17-41-52.jpg", path: "Folder 1/pics/photo_2024-06-08_17-41-52.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-06-08_17-42-20.jpg", path: "Folder 1/pics/photo_2024-06-08_17-42-20.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-06-08_17-42-34.jpg", path: "Folder 1/pics/photo_2024-06-08_17-42-34.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-06-08_17-42-40.jpg", path: "Folder 1/pics/photo_2024-06-08_17-42-40.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-06-28_12-49-04.jpg", path: "Folder 1/pics/photo_2024-06-28_12-49-04.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-06-28_12-49-18.jpg", path: "Folder 1/pics/photo_2024-06-28_12-49-18.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-06-28_12-49-23.jpg", path: "Folder 1/pics/photo_2024-06-28_12-49-23.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-06-28_12-49-28.jpg", path: "Folder 1/pics/photo_2024-06-28_12-49-28.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-06-28_12-49-33.jpg", path: "Folder 1/pics/photo_2024-06-28_12-49-33.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-06-28_12-49-37.jpg", path: "Folder 1/pics/photo_2024-06-28_12-49-37.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-06-28_12-49-41.jpg", path: "Folder 1/pics/photo_2024-06-28_12-49-41.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-07-06_10-02-03.jpg", path: "Folder 1/pics/photo_2024-07-06_10-02-03.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-07-06_10-02-12.jpg", path: "Folder 1/pics/photo_2024-07-06_10-02-12.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-07-06_10-02-16.jpg", path: "Folder 1/pics/photo_2024-07-06_10-02-16.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-07-06_10-02-23.jpg", path: "Folder 1/pics/photo_2024-07-06_10-02-23.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-07-06_10-02-51.jpg", path: "Folder 1/pics/photo_2024-07-06_10-02-51.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-07-06_10-02-56.jpg", path: "Folder 1/pics/photo_2024-07-06_10-02-56.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-07-06_10-03-01.jpg", path: "Folder 1/pics/photo_2024-07-06_10-03-01.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-07-06_10-03-06.jpg", path: "Folder 1/pics/photo_2024-07-06_10-03-06.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-07-06_10-03-15.jpg", path: "Folder 1/pics/photo_2024-07-06_10-03-15.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-07-06_10-03-28.jpg", path: "Folder 1/pics/photo_2024-07-06_10-03-28.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-07-06_10-03-36.jpg", path: "Folder 1/pics/photo_2024-07-06_10-03-36.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-07-06_10-03-42.jpg", path: "Folder 1/pics/photo_2024-07-06_10-03-42.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-07-06_10-03-48.jpg", path: "Folder 1/pics/photo_2024-07-06_10-03-48.jpg", folder: "Folder 1/pics", topics: [] },
+        { name: "photo_2024-07-06_10-03-53.jpg", path: "Folder 1/pics/photo_2024-07-06_10-03-53.jpg", folder: "Folder 1/pics", topics: [] },
+        // Folder 1 New folder
+        { name: "photo_2024-07-14_15-31-04.jpg", path: "Folder 1/New folder/photo_2024-07-14_15-31-04.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-14_15-31-17.jpg", path: "Folder 1/New folder/photo_2024-07-14_15-31-17.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-14_15-31-24.jpg", path: "Folder 1/New folder/photo_2024-07-14_15-31-24.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-14_15-31-34.jpg", path: "Folder 1/New folder/photo_2024-07-14_15-31-34.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-14_15-31-39.jpg", path: "Folder 1/New folder/photo_2024-07-14_15-31-39.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-14_15-31-54.jpg", path: "Folder 1/New folder/photo_2024-07-14_15-31-54.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-14_15-32-01.jpg", path: "Folder 1/New folder/photo_2024-07-14_15-32-01.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-14_15-32-09.jpg", path: "Folder 1/New folder/photo_2024-07-14_15-32-09.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-14_15-32-13.jpg", path: "Folder 1/New folder/photo_2024-07-14_15-32-13.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-16_05-22-38.jpg", path: "Folder 1/New folder/photo_2024-07-16_05-22-38.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-16_05-22-55.jpg", path: "Folder 1/New folder/photo_2024-07-16_05-22-55.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-16_05-23-00.jpg", path: "Folder 1/New folder/photo_2024-07-16_05-23-00.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-16_05-23-05.jpg", path: "Folder 1/New folder/photo_2024-07-16_05-23-05.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-16_05-23-11.jpg", path: "Folder 1/New folder/photo_2024-07-16_05-23-11.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-16_05-23-16.jpg", path: "Folder 1/New folder/photo_2024-07-16_05-23-16.jpg", folder: "Folder 1/New folder", topics: [] },
+        { name: "photo_2024-07-16_05-23-22.jpg", path: "Folder 1/New folder/photo_2024-07-16_05-23-22.jpg", folder: "Folder 1/New folder", topics: [] },
+        // Folder 1 pics PNGs
+        { name: "Screenshot 2024-02-05 102206.png", path: "Folder 1/pics/Screenshot 2024-02-05 102206.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-02-05 103048.png", path: "Folder 1/pics/Screenshot 2024-02-05 103048.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-02-09 092902.png", path: "Folder 1/pics/Screenshot 2024-02-09 092902.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-02-17 123004.png", path: "Folder 1/pics/Screenshot 2024-02-17 123004.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-02-19 192825.png", path: "Folder 1/pics/Screenshot 2024-02-19 192825.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-02-19 192915.png", path: "Folder 1/pics/Screenshot 2024-02-19 192915.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-02-19 192934.png", path: "Folder 1/pics/Screenshot 2024-02-19 192934.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-02-19 192955.png", path: "Folder 1/pics/Screenshot 2024-02-19 192955.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-02-19 193011.png", path: "Folder 1/pics/Screenshot 2024-02-19 193011.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-02-19 193026.png", path: "Folder 1/pics/Screenshot 2024-02-19 193026.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-02-19 193039.png", path: "Folder 1/pics/Screenshot 2024-02-19 193039.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-02-19 193058.png", path: "Folder 1/pics/Screenshot 2024-02-19 193058.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-02-19 193116.png", path: "Folder 1/pics/Screenshot 2024-02-19 193116.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-02-24 082050.png", path: "Folder 1/pics/Screenshot 2024-02-24 082050.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 184658.png", path: "Folder 1/pics/Screenshot 2024-06-20 184658.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 184712.png", path: "Folder 1/pics/Screenshot 2024-06-20 184712.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 184735.png", path: "Folder 1/pics/Screenshot 2024-06-20 184735.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 184754.png", path: "Folder 1/pics/Screenshot 2024-06-20 184754.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 184820.png", path: "Folder 1/pics/Screenshot 2024-06-20 184820.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 184841.png", path: "Folder 1/pics/Screenshot 2024-06-20 184841.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 184904.png", path: "Folder 1/pics/Screenshot 2024-06-20 184904.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 184939.png", path: "Folder 1/pics/Screenshot 2024-06-20 184939.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 184956.png", path: "Folder 1/pics/Screenshot 2024-06-20 184956.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 185026.png", path: "Folder 1/pics/Screenshot 2024-06-20 185026.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 185714.png", path: "Folder 1/pics/Screenshot 2024-06-20 185714.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 185739.png", path: "Folder 1/pics/Screenshot 2024-06-20 185739.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 185752.png", path: "Folder 1/pics/Screenshot 2024-06-20 185752.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 185847.png", path: "Folder 1/pics/Screenshot 2024-06-20 185847.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 185917.png", path: "Folder 1/pics/Screenshot 2024-06-20 185917.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 185937.png", path: "Folder 1/pics/Screenshot 2024-06-20 185937.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 185951.png", path: "Folder 1/pics/Screenshot 2024-06-20 185951.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 190359.png", path: "Folder 1/pics/Screenshot 2024-06-20 190359.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 190423.png", path: "Folder 1/pics/Screenshot 2024-06-20 190423.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 190441.png", path: "Folder 1/pics/Screenshot 2024-06-20 190441.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 190453.png", path: "Folder 1/pics/Screenshot 2024-06-20 190453.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-06-20 190609.png", path: "Folder 1/pics/Screenshot 2024-06-20 190609.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-08-09 093620.png", path: "Folder 1/pics/Screenshot 2024-08-09 093620.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-08-09 093736.png", path: "Folder 1/pics/Screenshot 2024-08-09 093736.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-08-09 093803.png", path: "Folder 1/pics/Screenshot 2024-08-09 093803.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-08-09 093839.png", path: "Folder 1/pics/Screenshot 2024-08-09 093839.png", folder: "Folder 1/pics", topics: [] },
+        { name: "Screenshot 2024-08-09 093930.png", path: "Folder 1/pics/Screenshot 2024-08-09 093930.png", folder: "Folder 1/pics", topics: [] },
+        // Folder 2 Previous Year Questions
+        { name: "IMG-20220315-WA0001.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0001.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220315-WA0002.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0002.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220315-WA0003.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0003.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220315-WA0004.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0004.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220315-WA0005.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0005.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220315-WA0006.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0006.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220315-WA0007.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0007.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220315-WA0008.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0008.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220315-WA0009.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0009.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220315-WA0010.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0010.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220315-WA0011.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0011.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220315-WA0012.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0012.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220315-WA0013.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0013.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220315-WA0014.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0014.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220315-WA0015.jpg", path: "Folder 2/Previous Year Questions/IMG-20220315-WA0015.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220320-WA0000.jpg", path: "Folder 2/Previous Year Questions/IMG-20220320-WA0000.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220320-WA0001.jpg", path: "Folder 2/Previous Year Questions/IMG-20220320-WA0001.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220320-WA0002.jpg", path: "Folder 2/Previous Year Questions/IMG-20220320-WA0002.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220320-WA0003.jpg", path: "Folder 2/Previous Year Questions/IMG-20220320-WA0003.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220320-WA0004.jpg", path: "Folder 2/Previous Year Questions/IMG-20220320-WA0004.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220320-WA0005.jpg", path: "Folder 2/Previous Year Questions/IMG-20220320-WA0005.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220320-WA0006.jpg", path: "Folder 2/Previous Year Questions/IMG-20220320-WA0006.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220323-WA0001.jpg", path: "Folder 2/Previous Year Questions/IMG-20220323-WA0001.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220323-WA0002.jpg", path: "Folder 2/Previous Year Questions/IMG-20220323-WA0002.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220323-WA0003.jpg", path: "Folder 2/Previous Year Questions/IMG-20220323-WA0003.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220323-WA0004.jpg", path: "Folder 2/Previous Year Questions/IMG-20220323-WA0004.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220323-WA0005.jpg", path: "Folder 2/Previous Year Questions/IMG-20220323-WA0005.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220711-WA0000.jpg", path: "Folder 2/Previous Year Questions/IMG-20220711-WA0000.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG-20220711-WA0001.jpg", path: "Folder 2/Previous Year Questions/IMG-20220711-WA0001.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220807_104658_777.jpg", path: "Folder 2/Previous Year Questions/IMG_20220807_104658_777.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220807_104703_311.jpg", path: "Folder 2/Previous Year Questions/IMG_20220807_104703_311.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220807_104707_122.jpg", path: "Folder 2/Previous Year Questions/IMG_20220807_104707_122.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220807_104710_660.jpg", path: "Folder 2/Previous Year Questions/IMG_20220807_104710_660.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220807_104715_886.jpg", path: "Folder 2/Previous Year Questions/IMG_20220807_104715_886.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220807_104719_805.jpg", path: "Folder 2/Previous Year Questions/IMG_20220807_104719_805.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220807_104723_467.jpg", path: "Folder 2/Previous Year Questions/IMG_20220807_104723_467.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220807_104727_280.jpg", path: "Folder 2/Previous Year Questions/IMG_20220807_104727_280.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220807_104731_288.jpg", path: "Folder 2/Previous Year Questions/IMG_20220807_104731_288.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220807_104734_978.jpg", path: "Folder 2/Previous Year Questions/IMG_20220807_104734_978.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_101903.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_101903.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_101904.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_101904.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_101918.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_101918.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_101942.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_101942.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_102127.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_102127.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_102328.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_102328.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_102439.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_102439.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_102503.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_102503.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_102703.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_102703.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_102721.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_102721.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_102819.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_102819.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_102828.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_102828.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_102920.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_102920.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_102932.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_102932.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_103555.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_103555.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_103656.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_103656.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_103823.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_103823.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_103939.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_103939.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_104016.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_104016.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_104056.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_104056.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_104147.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_104147.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_104408.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_104408.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_105339.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_105339.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_105350.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_105350.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_105749.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_105749.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_110145.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_110145.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_110544.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_110544.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_110938.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_110938.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_111249.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_111249.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "IMG_20220823_111804.jpg", path: "Folder 2/Previous Year Questions/IMG_20220823_111804.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_10_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_10_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_10_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_10_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_11_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_11_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_11_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_11_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_12_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_12_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_12_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_12_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_13_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_13_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_13_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_13_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_14_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_14_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_14_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_14_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_15_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_15_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_15_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_15_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_16_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_16_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_16_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_16_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_17_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_17_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_17_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_17_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_18_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_18_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_18_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_18_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_19_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_19_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_19_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_19_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_1_2025-07-22_11-38-16.jpg", path: "Folder 2/Previous Year Questions/photo_1_2025-07-22_11-38-16.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_1_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_1_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_1_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_1_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_20_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_20_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_20_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_20_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_21_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_21_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_21_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_21_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_22_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_22_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_22_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_22_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_23_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_23_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_23_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_23_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_24_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_24_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_24_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_24_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_25_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_25_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_25_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_25_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_26_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_26_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_26_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_26_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_27_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_27_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_27_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_27_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_28_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_28_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_28_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_28_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_29_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_29_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_29_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_29_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_2_2025-07-22_11-38-16.jpg", path: "Folder 2/Previous Year Questions/photo_2_2025-07-22_11-38-16.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_2_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_2_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_2_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_2_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_30_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_30_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_30_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_30_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_31_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_31_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_31_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_31_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_32_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_32_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_32_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_32_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_33_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_33_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_33_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_33_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_34_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_34_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_34_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_34_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_35_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_35_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_35_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_35_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_36_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_36_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_36_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_36_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_37_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_37_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_37_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_37_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_38_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_38_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_38_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_38_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_39_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_39_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_39_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_39_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_3_2025-07-22_11-38-16.jpg", path: "Folder 2/Previous Year Questions/photo_3_2025-07-22_11-38-16.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_3_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_3_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_3_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_3_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_40_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_40_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_40_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_40_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_41_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_41_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_41_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_41_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_42_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_42_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_42_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_42_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_43_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_43_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_43_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_43_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_44_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_44_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_44_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_44_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_45_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_45_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_45_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_45_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_46_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_46_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_46_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_46_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_47_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_47_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_47_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_47_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_48_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_48_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_48_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_48_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_49_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_49_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_49_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_49_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_4_2025-07-22_11-38-16.jpg", path: "Folder 2/Previous Year Questions/photo_4_2025-07-22_11-38-16.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_4_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_4_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_4_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_4_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_50_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_50_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_50_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_50_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_51_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_51_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_51_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_51_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_52_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_52_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_52_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_52_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_53_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_53_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_53_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_53_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_54_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_54_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_54_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_54_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_55_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_55_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_55_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_55_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_56_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_56_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_56_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_56_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_57_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_57_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_57_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_57_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_58_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_58_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_58_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_58_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_59_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_59_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_59_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_59_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_5_2025-07-22_11-38-16.jpg", path: "Folder 2/Previous Year Questions/photo_5_2025-07-22_11-38-16.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_5_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_5_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_5_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_5_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_60_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_60_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_61_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_61_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_62_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_62_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_63_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_63_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_64_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_64_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_65_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_65_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_66_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_66_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_67_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_67_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_68_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_68_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_69_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_69_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_6_2025-07-22_11-38-16.jpg", path: "Folder 2/Previous Year Questions/photo_6_2025-07-22_11-38-16.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_6_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_6_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_6_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_6_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_70_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_70_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_71_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_71_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_72_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_72_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_73_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_73_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_74_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_74_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_7_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_7_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_7_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_7_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_8_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_8_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_8_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_8_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_9_2025-07-22_11-41-24.jpg", path: "Folder 2/Previous Year Questions/photo_9_2025-07-22_11-41-24.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        { name: "photo_9_2025-07-22_11-51-40.jpg", path: "Folder 2/Previous Year Questions/photo_9_2025-07-22_11-51-40.jpg", folder: "Folder 2/Previous Year Questions", topics: [] },
+        // Folder 3
+        { name: "WhatsApp Image 2025-04-23 at 9.10.45 AM.jpeg", path: "Folder 3/WhatsApp Image 2025-04-23 at 9.10.45 AM.jpeg", folder: "Folder 3", topics: [] },
+        { name: "WhatsApp Image 2025-04-23 at 9.10.46 AM.jpeg", path: "Folder 3/WhatsApp Image 2025-04-23 at 9.10.46 AM.jpeg", folder: "Folder 3", topics: [] },
+    ],
+    doc: [
+        { name: "Zoho Aptitude  QUestions.docx", path: "Folder 1/Zoho Aptitude  QUestions.docx", folder: "Folder 1", topics: ["aptitude"] },
+        { name: "Zoho Aptitude  QUestions.docx", path: "Folder 1/Level 1/Zoho Aptitude  QUestions.docx", folder: "Folder 1/Level 1", topics: ["aptitude"] },
+        { name: "1.docx", path: "Folder 1/Level 2/1.docx", folder: "Folder 1/Level 2", topics: ["level2"] },
+        { name: "Dynamic Programming .numbers", path: "Folder 1/Level 2/Dynamic Programming .numbers", folder: "Folder 1/Level 2", topics: ["dsa", "level2"] },
+        { name: "Dynamic Programming .xlsx", path: "Folder 1/Level 2/Dynamic Programming .xlsx", folder: "Folder 1/Level 2", topics: ["dsa", "level2"] },
+        { name: "Zoho Round 3.docx", path: "Folder 1/Level 3/Zoho Round 3.docx", folder: "Folder 1/Level 3", topics: ["level3"] },
+        { name: "Important Links.txt", path: "Folder 2/Important links/Important Links.txt", folder: "Folder 2/Important links", topics: [] },
+        { name: "Zoho Important Aptitude Question and Answer.docx", path: "Folder 2/Previous Year Questions/Zoho Important Aptitude Question and Answer.docx", folder: "Folder 2/Previous Year Questions", topics: ["aptitude", "important"] },
+        { name: "Zoho Aptitude  QUestions.docx", path: "Folder 3/Zoho Aptitude  QUestions.docx", folder: "Folder 3", topics: ["aptitude"] },
+        { name: "Zoho C Snippet 4.7.24_key.docx", path: "Folder 3/Zoho C Snippet 4.7.24_key.docx", folder: "Folder 3", topics: ["aptitude"] },
+        { name: "zoho round 2 LP(1).docx", path: "Folder 3/zoho round 2 LP(1).docx", folder: "Folder 3", topics: ["level2"] },
+        { name: "Zoho Round 3-2.docx", path: "Folder 3/Zoho Round 3-2.docx", folder: "Folder 3", topics: ["level3"] },
+        { name: "zoho puzzles.docx", path: "Folder 3/zoho puzzles.docx", folder: "Folder 3", topics: [] },
+    ],
+    zip: [
+        { name: "Flight Ticket Booking System.zip", path: "Folder 2/Flight Ticket Booking System.zip", folder: "Folder 2", topics: ["lld"] },
+        { name: "Mail management system code.zip", path: "Folder 2/Mail management system code.zip", folder: "Folder 2", topics: ["lld"] },
+        { name: "Maze Runner code File.zip", path: "Folder 2/Maze Runner code File.zip", folder: "Folder 2", topics: ["lld"] },
+        { name: "Railway Ticket Booking.zip", path: "Folder 2/Railway Ticket Booking.zip", folder: "Folder 2", topics: ["lld"] },
+        { name: "Taxi Booking.zip", path: "Folder 2/Taxi Booking.zip", folder: "Folder 2", topics: ["lld"] },
+        { name: "TrainManagementSystem.zip", path: "Folder 1/Level 3/TrainManagementSystem.zip", folder: "Folder 1/Level 3", topics: ["level3", "lld"] },
+    ],
+    other: [
+        { name: "New Text Document.txt", path: "Folder 1/Level 3/Railways Notes/New Text Document.txt", folder: "Folder 1/Level 3/Railways Notes", topics: ["level3", "lld"] },
+        { name: "Passengers_Explanation.txt", path: "Folder 1/Level 3/Railways Notes/Passengers_Explanation.txt", folder: "Folder 1/Level 3/Railways Notes", topics: ["level3", "lld"] },
+        { name: "Railways_Explanation.txt", path: "Folder 1/Level 3/Railways Notes/Railways_Explanation.txt", folder: "Folder 1/Level 3/Railways Notes", topics: ["level3", "lld"] },
+        { name: "TicketBooker_Explanation.txt", path: "Folder 1/Level 3/Railways Notes/TicketBooker_Explanation.txt", folder: "Folder 1/Level 3/Railways Notes", topics: ["level3", "lld"] },
+    ]
+};
+
+// ============================================================
+//  HELPERS
+// ============================================================
+
+const extToTag = (name) => {
+    const ext = name.split('.').pop().toLowerCase();
+    if (ext === 'pdf' || ext === 'pdf') return 'pdf';
+    if (['jpg','jpeg','png','gif','webp','svg','ico','jpe','jfif'].includes(ext)) return ext;
+    if (ext === 'docx' || ext === 'doc' || ext === 'txt' || ext === 'xlsx' || ext === 'numbers') return 'docx';
+    return ext;
+};
+
+const typeLabel = {
+    pdf: 'PDF',
+    image: 'Image',
+    doc: 'Document',
+    zip: 'Archive',
+    other: 'Other'
+};
+
+const allDocs = [];
+Object.entries(DOCUMENTS).forEach(([type, list]) => {
+    list.forEach(d => {
+        allDocs.push({ ...d, type, ext: d.name.split('.').pop().toLowerCase() });
+    });
+});
+
+const folders = [...new Set(allDocs.map(d => d.folder))];
+
+// ============================================================
+//  RENDER
+// ============================================================
+
+function getIcon(type) {
+    switch(type) {
+        case 'pdf': return 'PDF';
+        case 'image': return 'IMG';
+        case 'doc': return 'DOC';
+        case 'zip': return 'ZIP';
+        default: return 'FILE';
+    }
+}
+
+function getIconClass(type) {
+    return `card__icon--${type}`;
+}
+
+function getTagClass(ext) {
+    return `card__tag--${ext}`;
+}
+
+function getTopicTagClass(topic) {
+    return `card__topic-tag--${topic}`;
+}
+
+const topicLabel = {
+    aptitude: 'Aptitude',
+    dsa: 'DSA',
+    level2: 'Level 2',
+    level3: 'Level 3',
+    lld: 'LLD',
+    important: 'Important'
+};
+
+function render() {
+    const container = document.getElementById('sections-container');
+    const activeFilter = document.querySelector('.filter-btn.active')?.dataset?.filter || 'all';
+    const searchTerm = (document.getElementById('search')?.value || '').toLowerCase().trim();
+    const activeTag = document.querySelector('.tag-btn.active')?.dataset?.tag || null;
+
+    let filtered = allDocs;
+    if (activeFilter !== 'all') {
+        filtered = filtered.filter(d => d.type === activeFilter);
+    }
+    if (activeTag) {
+        filtered = filtered.filter(d => d.topics && d.topics.includes(activeTag));
+    }
+    if (searchTerm) {
+        filtered = filtered.filter(d => d.name.toLowerCase().includes(searchTerm));
+    }
+
+    if (filtered.length === 0) {
+        container.innerHTML = '';
+        document.getElementById('empty-state').classList.remove('hidden');
+        updateCounts();
+        return;
+    }
+    document.getElementById('empty-state').classList.add('hidden');
+
+    // Group by type then by folder
+    const groups = {};
+    filtered.forEach(d => {
+        if (!groups[d.type]) groups[d.type] = {};
+        if (!groups[d.type][d.folder]) groups[d.type][d.folder] = [];
+        groups[d.type][d.folder].push(d);
+    });
+
+    const typeOrder = ['pdf', 'image', 'doc', 'zip', 'other'];
+
+    let html = '';
+    typeOrder.forEach(type => {
+        if (!groups[type]) return;
+        const folders = Object.keys(groups[type]).sort();
+        const totalInType = folders.reduce((s, f) => s + groups[type][f].length, 0);
+
+        html += `<section class="section" data-type="${type}">`;
+        html += `<div class="section-header">`;
+        html += `<h2>${typeLabel[type] || type}</h2>`;
+        html += `<span class="pill pill--${type}">${totalInType} files</span>`;
+        html += `</div>`;
+
+        folders.forEach(folder => {
+            const docs = groups[type][folder];
+            html += `<div class="folder-label">${folder}</div>`;
+            html += `<div class="grid">`;
+            docs.forEach(d => {
+                const icon = getIcon(d.type);
+                const tag = getTagClass(d.ext);
+                html += `<div class="card" data-name="${d.name.toLowerCase()}">`;
+                html += `<div class="card__icon ${getIconClass(d.type)}">${icon}</div>`;
+                html += `<div class="card__body">`;
+                html += `<div class="card__name"><a href="${d.path}" target="_blank">${d.name}</a></div>`;
+                html += `<div class="card__meta">`;
+                html += `<span class="card__tag ${tag}">${d.ext}</span>`;
+                // Show topic badges
+                if (d.topics && d.topics.length > 0) {
+                    d.topics.forEach(t => {
+                        html += `<span class="card__topic-tag ${getTopicTagClass(t)}">${topicLabel[t] || t}</span>`;
+                    });
+                }
+                html += `</div>`;
+                html += `</div></div>`;
+            });
+            html += `</div>`;
+        });
+
+        html += `</section>`;
+    });
+
+    container.innerHTML = html;
+    updateCounts();
+}
+
+function updateCounts() {
+    document.getElementById('total-count').textContent = allDocs.length;
+    document.getElementById('folder-count').textContent = folders.length;
+    document.getElementById('footer-count').textContent = allDocs.length;
+    document.getElementById('date-display').textContent = new Date().toLocaleDateString('en-IN', {
+        year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    ['all','pdf','image','doc','zip','other'].forEach(t => {
+        const el = document.getElementById(`count-${t}`);
+        if (el) {
+            const count = t === 'all' ? allDocs.length : (DOCUMENTS[t] ? DOCUMENTS[t].length : 0);
+            el.textContent = count;
+        }
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        const filter = btn.dataset.filter;
+        const count = filter === 'all' ? allDocs.length : (DOCUMENTS[filter] ? DOCUMENTS[filter].length : 0);
+        btn.querySelector('.count').textContent = count;
+    });
+
+    // Topic tag counts
+    document.querySelectorAll('.tag-btn').forEach(btn => {
+        const tag = btn.dataset.tag;
+        const count = allDocs.filter(d => d.topics && d.topics.includes(tag)).length;
+        btn.querySelector('.count').textContent = count;
+    });
+}
+
+// ============================================================
+//  EVENT BINDING
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    render();
+
+    // Filter buttons (type)
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
+            });
+            btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
+            render();
+        });
+    });
+
+    // Topic tag buttons
+    document.querySelectorAll('.tag-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Toggle behavior: clicking active tag deactivates it
+            if (btn.classList.contains('active')) {
+                btn.classList.remove('active');
+            } else {
+                document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            render();
+        });
+    });
+
+    // Search
+    document.getElementById('search').addEventListener('input', () => {
+        render();
+    });
+
+    // Keyboard support for tabs
+    document.querySelector('.filter-bar').addEventListener('keydown', (e) => {
+        const buttons = [...document.querySelectorAll('.filter-btn')];
+        const current = buttons.indexOf(document.activeElement);
+        if (current === -1) return;
+        if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            const next = (current + 1) % buttons.length;
+            buttons[next].focus();
+            buttons[next].click();
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            const prev = (current - 1 + buttons.length) % buttons.length;
+            buttons[prev].focus();
+            buttons[prev].click();
+        }
+    });
+});
+</script>
+
+</body>
+</html>
