@@ -1,0 +1,427 @@
+/* Light shell + dark code editor — LLD Lab */
+
+.lld-lab {
+  --lld-bg: #f4f6fa;
+  --lld-panel: #ffffff;
+  --lld-sidebar: #eef1f6;
+  --lld-border: #d8dde8;
+  --lld-text: #1a1d27;
+  --lld-muted: #5c6478;
+  --lld-accent: #0d9f8f;
+  --lld-accent-soft: rgba(13, 159, 143, 0.12);
+  --lld-easy: #0d9f6e;
+  --lld-medium: #c47a0a;
+  --lld-hard: #d64545;
+  --lld-code-font: 'JetBrains Mono', ui-monospace, monospace;
+  --lld-ui-font: 'Inter', system-ui, sans-serif;
+
+  /* Dark editor tokens */
+  --lld-editor-bg: #1e1e1e;
+  --lld-editor-panel: #252526;
+  --lld-editor-border: #3c3c3c;
+  --lld-editor-text: #d4d4d4;
+  --lld-editor-muted: #858585;
+  --lld-editor-tab: #2d2d2d;
+  --lld-output-bg: #141414;
+
+  display: grid;
+  grid-template-columns: minmax(200px, 240px) minmax(0, 1fr);
+  min-height: calc(100vh - 52px);
+  background: var(--lld-bg);
+  color: var(--lld-text);
+  font-family: var(--lld-ui-font);
+  line-height: 1.6;
+  overflow-x: clip;
+}
+
+/* ---------- Sidebar ---------- */
+.lld-sidebar {
+  background: var(--lld-sidebar);
+  border-right: 1px solid var(--lld-border);
+  padding: 20px 12px;
+  position: sticky;
+  top: 56px;
+  align-self: start;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+
+.lld-sidebar__head {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--lld-text);
+  padding: 8px 12px 16px;
+  letter-spacing: -0.01em;
+}
+
+.lld-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lld-sidebar__item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: var(--lld-muted);
+  font-family: var(--lld-ui-font);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lld-sidebar__item:hover {
+  color: var(--lld-text);
+  background: rgba(26, 29, 39, 0.05);
+}
+
+.lld-sidebar__item:focus-visible {
+  outline: 2px solid var(--lld-accent);
+  outline-offset: 1px;
+}
+
+.lld-sidebar__item--active {
+  background: var(--lld-panel);
+  color: var(--lld-text);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(26, 29, 39, 0.06);
+}
+
+/* ---------- Main ---------- */
+.lld-main {
+  min-width: 0;
+  padding: 32px 40px 64px;
+}
+
+.lld-content {
+  max-width: 880px;
+}
+
+.lld-content__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.lld-badge {
+  font-family: var(--lld-code-font);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.4px;
+}
+
+.lld-badge--easy {
+  background: rgba(13, 159, 110, 0.12);
+  color: var(--lld-easy);
+}
+
+.lld-badge--medium {
+  background: rgba(196, 122, 10, 0.12);
+  color: var(--lld-medium);
+}
+
+.lld-badge--hard {
+  background: rgba(214, 69, 69, 0.12);
+  color: var(--lld-hard);
+}
+
+.lld-badge--tag {
+  background: #e8ebf2;
+  color: var(--lld-muted);
+}
+
+.lld-content__title {
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--lld-text);
+  font-style: normal;
+  margin-bottom: 28px;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.lld-content__section-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lld-muted);
+  margin-bottom: 12px;
+  font-style: normal;
+}
+
+.lld-content__section-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.lld-content__section-row .lld-content__section-label {
+  margin-bottom: 0;
+}
+
+.lld-content__question {
+  margin-bottom: 36px;
+  padding: 20px 22px;
+  background: var(--lld-panel);
+  border: 1px solid var(--lld-border);
+  border-radius: 12px;
+}
+
+.lld-content__desc {
+  color: var(--lld-muted);
+  font-size: 0.9375rem;
+  margin-bottom: 14px;
+  max-width: 72ch;
+}
+
+.lld-content__req {
+  padding-left: 18px;
+  color: var(--lld-muted);
+  font-size: 0.875rem;
+}
+
+.lld-content__req li {
+  margin-bottom: 8px;
+}
+
+.lld-content__req b {
+  color: var(--lld-text);
+}
+
+.lld-content__code {
+  margin-bottom: 36px;
+}
+
+.lld-content__output {
+  margin-bottom: 24px;
+}
+
+/* ---------- Dark code editor ---------- */
+.lld-editor {
+  background: var(--lld-editor-bg);
+  border: 1px solid var(--lld-editor-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.lld-tabbar {
+  display: flex;
+  align-items: stretch;
+  background: var(--lld-editor-panel);
+  border-bottom: 1px solid var(--lld-editor-border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.lld-tab {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--lld-editor-muted);
+  font-family: var(--lld-code-font);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 12px 18px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.lld-tab:hover {
+  color: var(--lld-editor-text);
+}
+
+.lld-tab:focus-visible {
+  outline: 2px solid var(--lld-accent);
+  outline-offset: -2px;
+}
+
+.lld-tab--active {
+  color: var(--lld-accent);
+  border-bottom-color: var(--lld-accent);
+  background: var(--lld-editor-tab);
+}
+
+.lld-copy {
+  font-family: var(--lld-code-font);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--lld-muted);
+  background: var(--lld-panel);
+  border: 1px solid var(--lld-border);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.lld-copy:hover {
+  color: var(--lld-accent);
+  border-color: var(--lld-accent);
+}
+
+.lld-copy:focus-visible {
+  outline: 2px solid var(--lld-accent);
+  outline-offset: 2px;
+}
+
+.lld-copy--copied {
+  color: var(--lld-easy);
+  border-color: var(--lld-easy);
+}
+
+.lld-code-panel {
+  display: none;
+  background: var(--lld-editor-bg);
+}
+
+.lld-code-panel--active {
+  display: block;
+}
+
+.lld-code-panel pre {
+  margin: 0;
+  padding: 18px 20px;
+  max-height: min(520px, 60vh);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  line-height: 1.65;
+  font-size: 13.5px;
+}
+
+.lld-code-panel code {
+  font-family: var(--lld-code-font);
+  color: var(--lld-editor-text);
+  white-space: pre;
+  tab-size: 2;
+}
+
+/* Dark-theme syntax */
+.lld-tok-kw { color: #c586c0; }
+.lld-tok-type { color: #4ec9b0; }
+.lld-tok-str { color: #ce9178; }
+.lld-tok-num { color: #b5cea8; }
+.lld-tok-cm { color: #6a9955; font-style: italic; }
+
+/* ---------- Sample output (dark) ---------- */
+.lld-output {
+  background: var(--lld-output-bg);
+  border: 1px solid var(--lld-editor-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.lld-output pre {
+  margin: 0;
+  padding: 18px 20px;
+  font-family: var(--lld-code-font);
+  font-size: 13px;
+  color: #4ec9b0;
+  white-space: pre-wrap;
+  line-height: 1.7;
+  overflow-x: auto;
+}
+
+.lld-output__arrow {
+  color: var(--lld-editor-muted);
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 900px) {
+  .lld-lab {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .lld-sidebar {
+    position: sticky;
+    top: 56px;
+    z-index: 40;
+    height: auto;
+    padding: 12px 12px 0;
+    border-right: none;
+    border-bottom: 1px solid var(--lld-border);
+    background: var(--lld-panel);
+  }
+
+  .lld-sidebar__head {
+    padding: 4px 8px 10px;
+    font-size: 0.8125rem;
+  }
+
+  .lld-sidebar__nav {
+    flex-direction: row;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 12px;
+    scrollbar-width: none;
+  }
+
+  .lld-sidebar__nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lld-sidebar__item {
+    flex-shrink: 0;
+    width: auto;
+    padding: 8px 14px;
+    background: var(--lld-sidebar);
+    border-radius: 999px;
+  }
+
+  .lld-sidebar__item--active {
+    background: var(--lld-text);
+    color: #fff;
+    box-shadow: none;
+  }
+
+  .lld-main {
+    padding: 24px 5vw 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lld-main {
+    padding: 20px 4vw 40px;
+  }
+
+  .lld-content__question {
+    padding: 16px;
+  }
+
+  .lld-tab {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+
+  .lld-code-panel pre {
+    padding: 14px 12px;
+    font-size: 12px;
+    max-height: 420px;
+  }
+
+  .lld-output pre {
+    padding: 14px;
+    font-size: 12px;
+  }
+}
