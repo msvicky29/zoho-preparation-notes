@@ -18,13 +18,20 @@ const indexRows = [
   },
   {
     num: '03',
+    title: 'DB Schema',
+    path: '/db-schema',
+    blurb: 'Normalized table schemas with CREATE TABLE, sample data, and queries.',
+    status: 'live',
+  },
+  {
+    num: '04',
     title: 'DSA Cheat Sheet',
     path: '/dsa',
     blurb: 'Topic-wise must-solve list — still being written.',
     status: 'soon',
   },
   {
-    num: '04',
+    num: '05',
     title: 'Job Postings',
     path: '/jobs',
     blurb: 'Fresh openings for campus and early-career roles.',

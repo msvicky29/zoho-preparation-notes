@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import './LldLab.css'
+
 
 const QUESTIONS = [
   {
@@ -301,6 +303,7 @@ Booked: V1 | Total: Rs.5750.0`,
   },
 ]
 
+
 const JAVA_KEYWORDS = new Set([
   'public', 'private', 'protected', 'class', 'interface', 'implements',
   'extends', 'return', 'if', 'else', 'while', 'for', 'new', 'this',
@@ -447,29 +450,13 @@ function QuestionView({ question }) {
 }
 
 export default function LldLab() {
-  const [activeId, setActiveId] = useState(QUESTIONS[0].id)
-  const active = QUESTIONS.find((q) => q.id === activeId) ?? QUESTIONS[0]
+  const [searchParams] = useSearchParams()
+  const requestedId = searchParams.get('q')
+  const active =
+    QUESTIONS.find((q) => q.id === requestedId) ?? QUESTIONS[0]
 
   return (
     <div className="lld-lab">
-      <aside className="lld-sidebar" aria-label="LLD questions">
-        <div className="lld-sidebar__head">Low Level Design</div>
-        <nav className="lld-sidebar__nav" role="tablist" aria-orientation="vertical">
-          {QUESTIONS.map((q) => (
-            <button
-              key={q.id}
-              type="button"
-              role="tab"
-              aria-selected={q.id === activeId}
-              className={`lld-sidebar__item${q.id === activeId ? ' lld-sidebar__item--active' : ''}`}
-              onClick={() => setActiveId(q.id)}
-            >
-              {q.navTitle}
-            </button>
-          ))}
-        </nav>
-      </aside>
-
       <div className="lld-main">
         <QuestionView key={active.id} question={active} />
       </div>
