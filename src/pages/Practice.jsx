@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react' 
-import problems from '../../data/problems.json' 
+import { useState, useMemo, useEffect } from 'react' 
 import './Practice.css' 
+ 
+const API_URL = 'https://raw.githubusercontent.com/msvicky29/zoho-preparation-notes/refs/heads/main/data/problems.json' 
  
 const DIFFICULTY = { 
   Easy: 'prac-badge-easy', 
@@ -67,12 +68,32 @@ function ProblemView({ problem }) {
 export default function Practice() { 
   const [view, setView] = useState('browse') 
   const [activeTopic, setActiveTopic] = useState('All') 
-  const topics = useMemo(() => ['All', ...new Set(problems.map((p) => p.topic))], []) 
+  const [problems, setProblems] = useState([]) 
+  const [status, setStatus] = useState('loading') 
+ 
+  async function loadProblems() { 
+    setStatus('loading') 
+    try { 
+      const res = await fetch(API_URL + '?t=' + Date.now()) 
+      if (!res.ok) throw new Error('bad status ' + res.status) 
+      const data = await res.json() 
+      setProblems(Array.isArray(data) ? data : []) 
+      setStatus('ok') 
+    } catch (e) { 
+      setStatus('error') 
+    } 
+  } 
+ 
+  useEffect(() => { 
+    loadProblems() 
+  }, [view]) 
+ 
+  const topics = useMemo(() => ['All', ...new Set(problems.map((p) => p.topic))], [problems]) 
   const filtered = useMemo(() => { 
     if (!problems.length) return [] 
     if (view === 'today') return [pickDaily(problems)] 
     return activeTopic === 'All' ? problems : problems.filter((p) => p.topic === activeTopic) 
-  }, [view, activeTopic]) 
+  }, [view, activeTopic, problems]) 
  
   return ( 
     <div className='prac'> 
@@ -84,17 +105,18 @@ export default function Practice() {
         <button className={view === 'browse' ? 'prac-tab prac-tab--active' : 'prac-tab'} onClick={() => setView('browse')}> Browse </button> 
         <button className={view === 'today' ? 'prac-tab prac-tab--active' : 'prac-tab'} onClick={() => setView('today')}> Question of the Day </button> 
       </div> 
-      {view === 'browse' && ( 
-        <div className='prac-topics'> 
-          {topics.map((t) => ( 
-            <button key={t} className={activeTopic === t ? 'prac-topic prac-topic--active' : 'prac-topic'} onClick={() => setActiveTopic(t)}> {t} </button> 
-          ))} 
-        </div> 
-      )} 
-      <div className='prac-list'> 
+      {status === 'loading' && <p className='prac-empty'> Loading solutions... </p>} 
+      {status === 'error' && (<div className='prac-empty'> 
+        <p> Could not load solutions from GitHub. </p> 
+        <button className='prac-reveal' onClick={() => loadProblems()}> Retry </button> 
+      </div>)} 
+      {status === 'ok' && view === 'browse' && (<div className='prac-topics'> 
+        {topics.map((t) => (<button key={t} className={activeTopic === t ? 'prac-topic prac-topic--active' : 'prac-topic'} onClick={() => setActiveTopic(t)}> {t} </button>))} 
+      </div>)} 
+      {status === 'ok' && (<div className='prac-list'> 
         {filtered.map((p) => <ProblemView key={p.id} problem={p} />)} 
-      </div> 
-      {!filtered.length && <p className='prac-empty'> No solutions yet. Push a .java file and the pipeline will add it here. </p>} 
+      </div>)} 
+      {status === 'ok' && !filtered.length && <p className='prac-empty'> No solutions found for this filter. </p>} 
     </div> 
   ) 
 } 
