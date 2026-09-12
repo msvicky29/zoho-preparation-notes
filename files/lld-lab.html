@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLD Code Lab — Zoho Preparation Kit</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f6fa;
+    --panel:#ffffff;
+    --sidebar:#eef1f6;
+    --border:#d8dde8;
+    --text:#1a1d27;
+    --muted:#5c6478;
+    --accent:#0d9f8f;
+    --easy:#0d9f6e;
+    --medium:#c47a0a;
+    --hard:#d64545;
+    --editor-bg:#1e1e1e;
+    --editor-panel:#252526;
+    --editor-border:#3c3c3c;
+    --editor-text:#d4d4d4;
+    --editor-muted:#858585;
+    --code-font:'JetBrains Mono', monospace;
+    --ui-font:'Inter', sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{ overflow-x:clip; height:100%; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--ui-font);
+    line-height:1.6;
+  }
+
+  .lab{
+    display:grid;
+    grid-template-columns:minmax(200px,240px) minmax(0,1fr);
+    min-height:100vh;
+  }
+
+  .sidebar{
+    background:var(--sidebar);
+    border-right:1px solid var(--border);
+    padding:20px 12px;
+    position:sticky;
+    top:0;
+    align-self:start;
+    height:100vh;
+    overflow-y:auto;
+  }
+  .sidebar__head{
+    font-size:0.9375rem;
+    font-weight:700;
+    padding:8px 12px 16px;
+  }
+  .sidebar__nav{ display:flex; flex-direction:column; gap:4px; }
+  .sidebar__item{
+    display:block; width:100%; text-align:left;
+    border:none; background:transparent;
+    color:var(--muted); font-family:var(--ui-font);
+    font-size:0.875rem; font-weight:500;
+    padding:10px 12px; border-radius:8px; cursor:pointer;
+    transition:background .15s, color .15s;
+  }
+  .sidebar__item:hover{ color:var(--text); background:rgba(26,29,39,.05); }
+  .sidebar__item.active{
+    background:var(--panel); color:var(--text); font-weight:600;
+    box-shadow:0 1px 2px rgba(26,29,39,.06);
+  }
+
+  .main{ min-width:0; padding:32px 40px 64px; }
+  .pane{ display:none; max-width:880px; }
+  .pane.active{ display:block; }
+
+  .meta{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+  .badge{
+    font-family:var(--code-font); font-size:11px; font-weight:600;
+    padding:4px 10px; border-radius:20px; letter-spacing:.4px;
+  }
+  .badge.medium{ background:rgba(196,122,10,.12); color:var(--medium); }
+  .badge.hard{ background:rgba(214,69,69,.12); color:var(--hard); }
+  .badge.tag{ background:#e8ebf2; color:var(--muted); }
+
+  h1{
+    font-size:clamp(1.5rem,3.5vw,2rem);
+    font-weight:800; letter-spacing:-0.02em;
+    line-height:1.2; margin-bottom:28px;
+    overflow-wrap:anywhere; min-width:0;
+  }
+  .section-label{
+    font-size:0.8125rem; font-weight:700;
+    letter-spacing:.06em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:12px;
+  }
+  .section-row{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; margin-bottom:12px;
+  }
+  .section-row .section-label{ margin-bottom:0; }
+
+  .question-box{
+    margin-bottom:36px; padding:20px 22px;
+    background:var(--panel); border:1px solid var(--border);
+    border-radius:12px;
+  }
+  .question-box .desc{ color:var(--muted); font-size:0.9375rem; margin-bottom:14px; }
+  .req-list{ padding-left:18px; color:var(--muted); font-size:0.875rem; }
+  .req-list li{ margin-bottom:8px; }
+  .req-list b{ color:var(--text); }
+
+  .code-section{ margin-bottom:36px; }
+
+  .editor{
+    background:var(--editor-bg);
+    border:1px solid var(--editor-border);
+    border-radius:10px; overflow:hidden;
+  }
+  .tabbar{
+    display:flex; background:var(--editor-panel);
+    border-bottom:1px solid var(--editor-border);
+    overflow-x:auto; scrollbar-width:thin;
+  }
+  .tab{
+    flex-shrink:0; border:none; background:transparent;
+    color:var(--editor-muted); font-family:var(--code-font);
+    font-size:13px; font-weight:500; padding:12px 18px;
+    cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap;
+  }
+  .tab:hover{ color:var(--editor-text); }
+  .tab.active{
+    color:var(--accent); border-bottom-color:var(--accent);
+    background:#2d2d2d;
+  }
+
+  .copy-btn{
+    font-family:var(--code-font); font-size:12px; font-weight:600;
+    color:var(--muted); background:var(--panel);
+    border:1px solid var(--border); padding:6px 12px;
+    border-radius:6px; cursor:pointer;
+  }
+  .copy-btn:hover{ color:var(--accent); border-color:var(--accent); }
+  .copy-btn.copied{ color:var(--easy); border-color:var(--easy); }
+
+  .code-panel{ display:none; }
+  .code-panel.active{ display:block; }
+  pre[class*="language-"]{
+    margin:0 !important;
+    background:var(--editor-bg) !important;
+    font-size:13.5px !important;
+    max-height:min(520px,60vh);
+    border-radius:0 !important;
+    padding:18px 20px !important;
+  }
+  code[class*="language-"]{ font-family:var(--code-font) !important; }
+
+  .output{
+    background:#141414; border:1px solid var(--editor-border);
+    border-radius:10px; overflow:hidden;
+  }
+  .output pre{
+    padding:18px 20px; font-family:var(--code-font);
+    font-size:13px; color:#4ec9b0; white-space:pre-wrap; line-height:1.7;
+  }
+  .output .arrow{ color:var(--editor-muted); }
+
+  @media (max-width:900px){
+    .lab{ grid-template-columns:1fr; }
+    .sidebar{
+      position:sticky; top:0; z-index:40; height:auto;
+      padding:12px 12px 0; border-right:none;
+      border-bottom:1px solid var(--border); background:var(--panel);
+    }
+    .sidebar__head{ padding:4px 8px 10px; font-size:0.8125rem; }
+    .sidebar__nav{
+      flex-direction:row; gap:6px; overflow-x:auto;
+      padding-bottom:12px; scrollbar-width:none;
+    }
+    .sidebar__nav::-webkit-scrollbar{ display:none; }
+    .sidebar__item{
+      flex-shrink:0; width:auto; padding:8px 14px;
+      background:var(--sidebar); border-radius:999px;
+    }
+    .sidebar__item.active{ background:var(--text); color:#fff; box-shadow:none; }
+    .main{ padding:24px 5vw 48px; }
+  }
+  @media (max-width:480px){
+    .main{ padding:20px 4vw 40px; }
+    .question-box{ padding:16px; }
+    .tab{ padding:10px 14px; font-size:12px; }
+    pre[class*="language-"]{ font-size:12px !important; padding:14px 12px !important; }
+  }
+</style>
+</head>
+<body>
+<div class="lab">
+  <aside class="sidebar">
+    <div class="sidebar__head">Low Level Design</div>
+    <nav class="sidebar__nav">
+      <button class="sidebar__item active" data-pane="snake">Snake and Ladder</button>
+      <button class="sidebar__item" data-pane="rental">Car Rental</button>
+    </nav>
+  </aside>
+
+  <div class="main">
+
+    <!-- Snake and Ladder -->
+    <div class="pane active" id="pane-snake">
+      <div class="meta">
+        <span class="badge medium">MEDIUM</span>
+        <span class="badge tag">OOP Design</span>
+        <span class="badge tag">Simulation</span>
+      </div>
+      <h1>Design Snake and Ladder</h1>
+
+      <div class="question-box">
+        <div class="section-label">Problem</div>
+        <p class="desc">Design a multiplayer Snake and Ladder game with a configurable board, dice, players, snakes and ladders — commonly asked at Flipkart, Swiggy, and Ola for SDE-1/2 machine coding rounds.</p>
+        <ul class="req-list">
+          <li><b>Board:</b> Configurable size (default 100 cells) with a set of snakes and ladders placed at specific positions.</li>
+          <li><b>Dice:</b> A single 6-faced dice; support for multiple dice as an extension.</li>
+          <li><b>Players:</b> 2–4 players take turns rolling the dice and moving their piece.</li>
+          <li><b>Snakes/Ladders:</b> Landing on a snake's head moves the player down to its tail; landing on a ladder's base moves the player up to its top.</li>
+          <li><b>Win condition:</b> First player to reach exactly the last cell wins. Overshoot moves are ignored (player stays in place).</li>
+          <li><b>Extensibility:</b> Should support adding new dice types or board sizes without changing core game logic (Open/Closed Principle).</li>
+        </ul>
+      </div>
+
+      <div class="code-section">
+        <div class="section-row">
+          <div class="section-label">Solution</div>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <div class="editor">
+          <div class="tabbar">
+            <button class="tab active" data-target="snake-Board">Board.java</button>
+            <button class="tab" data-target="snake-Dice">Dice.java</button>
+            <button class="tab" data-target="snake-Player">Player.java</button>
+            <button class="tab" data-target="snake-Game">Game.java</button>
+          </div>
+          <div class="code-panel active" id="snake-Board">
+<pre><code class="language-java">public class Board {
+    private final int size;
+    private final Map&lt;Integer, Integer&gt; snakesAndLadders = new HashMap&lt;&gt;();
+
+    public Board(int size) {
+        this.size = size;
+    }
+
+    public void addSnake(int head, int tail) {
+        if (head &lt;= tail) throw new IllegalArgumentException("Snake head must be above tail");
+        snakesAndLadders.put(head, tail);
+    }
+
+    public void addLadder(int base, int top) {
+        if (base &gt;= top) throw new IllegalArgumentException("Ladder base must be below top");
+        snakesAndLadders.put(base, top);
+    }
+
+    public int getFinalPosition(int position) {
+        return snakesAndLadders.getOrDefault(position, position);
+    }
+
+    public int getSize() {
+        return size;
+    }
+}</code></pre>
+          </div>
+          <div class="code-panel" id="snake-Dice">
+<pre><code class="language-java">import java.util.Random;
+
+public class Dice {
+    private final int faces;
+    private final Random random = new Random();
+
+    public Dice(int faces) {
+        this.faces = faces;
+    }
+
+    public int roll() {
+        return random.nextInt(faces) + 1;
+    }
+}</code></pre>
+          </div>
+          <div class="code-panel" id="snake-Player">
+<pre><code class="language-java">public class Player {
+    private final String name;
+    private int position;
+
+    public Player(String name) {
+        this.name = name;
+        this.position = 0;
+    }
+
+    public String getName() { return name; }
+    public int getPosition() { return position; }
+    public void setPosition(int position) { this.position = position; }
+}</code></pre>
+          </div>
+          <div class="code-panel" id="snake-Game">
+<pre><code class="language-java">import java.util.*;
+
+public class Game {
+    private final Board board;
+    private final Dice dice;
+    private final Queue&lt;Player&gt; players = new LinkedList&lt;&gt;();
+
+    public Game(Board board, Dice dice, List&lt;Player&gt; playerList) {
+        this.board = board;
+        this.dice = dice;
+        this.players.addAll(playerList);
+    }
+
+    public void play() {
+        while (players.size() &gt; 1) {
+            Player current = players.poll();
+            int roll = dice.roll();
+            int newPos = current.getPosition() + roll;
+
+            if (newPos &gt; board.getSize()) {
+                System.out.println(current.getName() + " rolled " + roll + " — overshoot, stays at " + current.getPosition());
+                players.add(current);
+                continue;
+            }
+
+            newPos = board.getFinalPosition(newPos);
+            current.setPosition(newPos);
+            System.out.println(current.getName() + " rolled " + roll + " -&gt; moved to " + newPos);
+
+            if (newPos == board.getSize()) {
+                System.out.println(current.getName() + " WINS!");
+                return;
+            }
+            players.add(current);
+        }
+    }
+
+    public static void main(String[] args) {
+        Board board = new Board(100);
+        board.addSnake(99, 21);
+        board.addLadder(4, 56);
+
+        List&lt;Player&gt; players = List.of(new Player("Vignesh"), new Player("Arun"));
+        Game game = new Game(board, new Dice(6), players);
+        game.play();
+    }
+}</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">Sample Output</div>
+      <div class="output">
+        <pre><span class="arrow">$</span> javac Game.java && java Game
+
+Vignesh rolled 4 -&gt; moved to 56
+Arun rolled 2 -&gt; moved to 2
+Vignesh rolled 5 -&gt; moved to 61
+Arun rolled 6 -&gt; moved to 8
+...
+Vignesh rolled 3 -&gt; moved to 100
+Vignesh WINS!</pre>
+      </div>
+    </div>
+
+    <!-- Car Rental -->
+    <div class="pane" id="pane-rental">
+      <div class="meta">
+        <span class="badge hard">HARD</span>
+        <span class="badge tag">Strategy Pattern</span>
+        <span class="badge tag">Booking System</span>
+      </div>
+      <h1>Design a Car Rental Service</h1>
+
+      <div class="question-box">
+        <div class="section-label">Problem</div>
+        <p class="desc">Design a system like Zoomcar/Avis that lets users search available vehicles, book them for a date range, and calculates rent using pluggable pricing strategies.</p>
+        <ul class="req-list">
+          <li><b>Vehicles:</b> Multiple types (Hatchback, SUV, Sedan) each with its own hourly/daily rate.</li>
+          <li><b>Search:</b> Users can search available vehicles by type and date range.</li>
+          <li><b>Booking:</b> A vehicle can only be booked by one user for a given date range (no overlapping bookings).</li>
+          <li><b>Pricing:</b> Rent = base rate × duration, with support for pluggable strategies (e.g. weekend surcharge, long-duration discount).</li>
+          <li><b>Cancellation:</b> Users can cancel a booking before the rental starts.</li>
+          <li><b>Extensibility:</b> New vehicle types or pricing strategies should be addable without modifying existing booking logic.</li>
+        </ul>
+      </div>
+
+      <div class="code-section">
+        <div class="section-row">
+          <div class="section-label">Solution</div>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <div class="editor">
+          <div class="tabbar">
+            <button class="tab active" data-target="rental-Vehicle">Vehicle.java</button>
+            <button class="tab" data-target="rental-Pricing">PricingStrategy.java</button>
+            <button class="tab" data-target="rental-Booking">Booking.java</button>
+            <button class="tab" data-target="rental-Service">RentalService.java</button>
+          </div>
+          <div class="code-panel active" id="rental-Vehicle">
+<pre><code class="language-java">public class Vehicle {
+    private final String id;
+    private final String type;      // "HATCHBACK", "SUV", "SEDAN"
+    private final double dailyRate;
+    private boolean isAvailable;
+
+    public Vehicle(String id, String type, double dailyRate) {
+        this.id = id;
+        this.type = type;
+        this.dailyRate = dailyRate;
+        this.isAvailable = true;
+    }
+
+    public String getId() { return id; }
+    public String getType() { return type; }
+    public double getDailyRate() { return dailyRate; }
+    public boolean isAvailable() { return isAvailable; }
+    public void setAvailable(boolean available) { isAvailable = available; }
+}</code></pre>
+          </div>
+          <div class="code-panel" id="rental-Pricing">
+<pre><code class="language-java">public interface PricingStrategy {
+    double calculate(Vehicle vehicle, int days);
+}
+
+class DefaultPricing implements PricingStrategy {
+    public double calculate(Vehicle vehicle, int days) {
+        return vehicle.getDailyRate() * days;
+    }
+}
+
+class WeekendSurchargePricing implements PricingStrategy {
+    public double calculate(Vehicle vehicle, int days) {
+        double base = vehicle.getDailyRate() * days;
+        return base + (base * 0.15); // 15% weekend surcharge
+    }
+}
+
+class LongDurationDiscountPricing implements PricingStrategy {
+    public double calculate(Vehicle vehicle, int days) {
+        double base = vehicle.getDailyRate() * days;
+        if (days &gt;= 7) return base - (base * 0.10); // 10% off for 7+ days
+        return base;
+    }
+}</code></pre>
+          </div>
+          <div class="code-panel" id="rental-Booking">
+<pre><code class="language-java">import java.time.LocalDate;
+import java.util.UUID;
+
+public class Booking {
+    private final String bookingId;
+    private final Vehicle vehicle;
+    private final String userId;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
+    private final double totalCost;
+
+    public Booking(Vehicle vehicle, String userId, LocalDate startDate, LocalDate endDate, double totalCost) {
+        this.bookingId = UUID.randomUUID().toString();
+        this.vehicle = vehicle;
+        this.userId = userId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.totalCost = totalCost;
+    }
+
+    public String getBookingId() { return bookingId; }
+    public Vehicle getVehicle() { return vehicle; }
+    public double getTotalCost() { return totalCost; }
+}</code></pre>
+          </div>
+          <div class="code-panel" id="rental-Service">
+<pre><code class="language-java">import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+
+public class RentalService {
+    private final List&lt;Vehicle&gt; vehicles = new ArrayList&lt;&gt;();
+    private final Map&lt;String, Booking&gt; bookings = new HashMap&lt;&gt;();
+    private final PricingStrategy pricingStrategy;
+
+    public RentalService(PricingStrategy pricingStrategy) {
+        this.pricingStrategy = pricingStrategy;
+    }
+
+    public void addVehicle(Vehicle v) { vehicles.add(v); }
+
+    public List&lt;Vehicle&gt; searchAvailable(String type) {
+        List&lt;Vehicle&gt; result = new ArrayList&lt;&gt;();
+        for (Vehicle v : vehicles) {
+            if (v.getType().equals(type) &amp;&amp; v.isAvailable()) result.add(v);
+        }
+        return result;
+    }
+
+    public Booking bookVehicle(Vehicle vehicle, String userId, LocalDate start, LocalDate end) {
+        if (!vehicle.isAvailable()) throw new IllegalStateException("Vehicle not available");
+        int days = (int) ChronoUnit.DAYS.between(start, end);
+        double cost = pricingStrategy.calculate(vehicle, Math.max(days, 1));
+
+        vehicle.setAvailable(false);
+        Booking booking = new Booking(vehicle, userId, start, end, cost);
+        bookings.put(booking.getBookingId(), booking);
+        return booking;
+    }
+
+    public void cancelBooking(String bookingId) {
+        Booking b = bookings.remove(bookingId);
+        if (b != null) b.getVehicle().setAvailable(true);
+    }
+
+    public static void main(String[] args) {
+        RentalService service = new RentalService(new WeekendSurchargePricing());
+        service.addVehicle(new Vehicle("V1", "SUV", 2500));
+
+        List&lt;Vehicle&gt; available = service.searchAvailable("SUV");
+        Booking booking = service.bookVehicle(available.get(0), "user_101",
+                LocalDate.of(2026, 8, 1), LocalDate.of(2026, 8, 3));
+
+        System.out.println("Booked: " + booking.getVehicle().getId() + " | Total: Rs." + booking.getTotalCost());
+    }
+}</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">Sample Output</div>
+      <div class="output">
+        <pre><span class="arrow">$</span> javac RentalService.java && java RentalService
+
+Booked: V1 | Total: Rs.5750.0</pre>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script>
+  document.querySelectorAll('.sidebar__item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.sidebar__item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+      document.getElementById('pane-' + btn.dataset.pane).classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.tabbar').forEach(bar => {
+    bar.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        bar.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const editor = bar.closest('.editor');
+        editor.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+        editor.querySelector('#' + tab.dataset.target).classList.add('active');
+      });
+    });
+  });
+
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const section = btn.closest('.code-section');
+      const code = section.querySelector('.code-panel.active code');
+      navigator.clipboard.writeText(code.innerText).then(() => {
+        const original = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 1500);
+      });
+    });
+  });
+</script>
+</body>
+</html>

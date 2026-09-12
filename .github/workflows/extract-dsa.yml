@@ -1,0 +1,40 @@
+name: Extract DSA Questions 
+ 
+# Trigger: only when a .java file is pushed/changed. No manual step. 
+on: 
+  push: 
+    branches: [main] 
+    paths: 
+      - "**/*.java" 
+ 
+permissions: 
+  contents: write 
+ 
+jobs: 
+  extract: 
+    runs-on: ubuntu-latest 
+    steps: 
+      - name: Checkout repo 
+        uses: actions/checkout@v4 
+        with: 
+          fetch-depth: 0  
+ 
+      - name: Set up Node 
+        uses: actions/setup-node@v4 
+        with: 
+          node-version: "20" 
+ 
+      - name: Run extractor 
+        run: node scripts/extract-code.js 
+ 
+      - name: Commit updated problems.json 
+        run: | 
+          git config user.name "dsa-pipeline-bot" 
+          git config user.email "actions@github.com" 
+          git add data/problems.json 
+          if git diff --cached --quiet; then 
+            echo "No changes, skipping commit." 
+          else 
+            git commit -m "chore: auto-update problems.json [skip ci]" 
+            git push 
+          fi 
