@@ -11,5 +11,18 @@
     "dateAdded": "2026-09-12",
     "lastRevised": null,
     "revisionCount": 0
+  },
+  {
+    "id": "insert-node-in-bst",
+    "title": "InsertNodeInBST",
+    "question": "Given the root node of a binary search tree (BST) and a value to insert, insert the value into the BST such that the tree remains a valid BST. Return the root of the tree after insertion.",
+    "topic": "Tree",
+    "difficulty": "Medium",
+    "platform": "LeetCode",
+    "code": "class Solution {\n    public TreeNode insertIntoBST(TreeNode root, int val) {\n        if(root==null){\n            return new TreeNode(val);\n        }\n        if(root.val<val){\n            root.right=insertIntoBST(root.right,val);\n        }\n        else{\n            root.left=insertIntoBST(root.left,val);\n        }\n        return root;\n    }\n}",
+    "filePath": "sample/dsa/InsertNodeInBST.java",
+    "dateAdded": "2026-09-12",
+    "lastRevised": null,
+    "revisionCount": 0
   }
 ]
