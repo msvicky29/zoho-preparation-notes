@@ -24,5 +24,31 @@
     "dateAdded": "2026-09-12",
     "lastRevised": null,
     "revisionCount": 0
+  },
+  {
+    "id": "check-anagram-in-bst",
+    "title": "CheckAnagramInBST",
+    "question": "Given two binary trees, determine whether they are level-wise anagrams of each other. This means that for every level, the two trees must contain the same node values with the same frequencies, regardless of order. Return true if all corresponding levels match, otherwise false.",
+    "topic": "Tree",
+    "difficulty": "Medium",
+    "platform": "GeeksforGeeks",
+    "code": "class Solution {\n    public boolean areAnagrams(Node root1, Node root2) {\n        Queue<Node> q1=new LinkedList<>();\n        Queue<Node> q2=new LinkedList<>();\n        q1.offer(root1);\n        q2.offer(root2);\n        while(!q1.isEmpty() || !q2.isEmpty()){\n           int s1=q1.size();\n           int s2=q2.size();\n           if(s1!=s2){\n               return false;\n           }\n           Map<Integer,Integer> map=new HashMap<>();\n           for(int i=0;i<s1;i++){\n               Node curr=q1.poll();\n               map.put(curr.data,map.getOrDefault(curr.data,0)+1);\n               if(curr.left!=null){\n                   q1.offer(curr.left);\n               }\n               if(curr.right!=null){\n                   q1.offer(curr.right);\n               }\n           }\n           for(int i=0;i<s2;i++){\n               Node curr=q2.poll();\n               if(!map.containsKey(curr.data)){\n                   return false;\n               }\n               map.put(curr.data,map.get(curr.data)-1);\n               if(map.get(curr.data)==0){\n                   map.remove(curr.data);\n               }\n               if(curr.left!=null){\n                   q2.offer(curr.left);\n               }\n               if(curr.right!=null){\n                   q2.offer(curr.right);\n               }\n               \n           }\n           if(!map.isEmpty()) {\n               return false;\n           }\n        }\n        \n        return q1.isEmpty() && q2.isEmpty();\n       \n    }\n}",
+    "filePath": "sample/dsa/CheckAnagramInBST.java",
+    "dateAdded": "2026-09-15",
+    "lastRevised": null,
+    "revisionCount": 0
+  },
+  {
+    "id": "reversal-order",
+    "title": "ReversalOrder",
+    "question": "Given the root of a binary tree, return its reverse level order traversal. The traversal should process nodes from the bottommost level up to the root, and within each level from left to right.",
+    "topic": "Tree",
+    "difficulty": "Easy",
+    "platform": "GeeksforGeeks",
+    "code": "class Solution {\n    public List<Integer> reverseLevelOrder(Node root) {\n        LinkedList<Node> ll=new LinkedList<>();\n        LinkedList<Integer> result=new LinkedList<>();\n        if(root==null){\n            return result;\n        }\n        ll.addFirst(root);\n        while(!ll.isEmpty()){\n            int size=ll.size();\n            for(int i=0;i<size;i++){\n                Node node=ll.pollFirst();\n                result.addFirst(node.data);\n                if(node.right!=null){\n                    ll.addLast(node.right);\n                }\n                if(node.left!=null){\n                    ll.addLast(node.left);\n                }\n            }\n        }\n        return result;\n    }\n}",
+    "filePath": "sample/dsa/ReversalOrder.java",
+    "dateAdded": "2026-09-15",
+    "lastRevised": null,
+    "revisionCount": 0
   }
 ]
