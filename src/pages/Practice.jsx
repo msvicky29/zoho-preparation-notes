@@ -20,25 +20,72 @@ function pickDaily(list) {
   return list[seed % list.length] 
 } 
  
-function CodeBlock({ code }) { 
-  const [copied, setCopied] = useState(false) 
-  const copy = async () => { 
-    try { 
-      await navigator.clipboard.writeText(code) 
-      setCopied(true) 
-      setTimeout(() => setCopied(false), 1500) 
-    } catch (e) {} 
-  } 
-  return ( 
-    <div className='prac-code'> 
-      <button className='prac-copy' onClick={copy}> 
-        {copied ? 'Copied!' : 'Copy'} 
-      </button> 
-      <pre className='prac-code__pre'> 
-        <code> {code} </code> 
-      </pre> 
-    </div> 
-  ) 
+const JAVA_KEYWORDS = new Set([
+  'public', 'private', 'protected', 'class', 'interface', 'implements',
+  'extends', 'return', 'if', 'else', 'while', 'for', 'new', 'this',
+  'static', 'final', 'void', 'import', 'package', 'throw', 'throws',
+  'try', 'catch', 'finally', 'true', 'false', 'null', 'instanceof',
+  'int', 'double', 'boolean', 'char', 'long', 'float', 'byte', 'short',
+])
+
+function highlightJava(code) {
+  const parts = []
+  const re =
+    /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:\\.[^"\\])*")|(\b\d+(?:\.\d+)?\b)|(\b[A-Z][A-Za-z0-9_]*\b)|(\b[a-z][A-Za-z0-9_]*\b)|([^A-Za-z0-9_"/\s]+)|(\s+)/g
+
+  let match
+  while ((match = re.exec(code)) !== null) {
+    const [full, comment, str, num, typeish, word, punct, space] = match
+    if (comment) {
+      parts.push(<span key={parts.length} className='prac-tok-cm'>{comment}</span>)
+    } else if (str) {
+      parts.push(<span key={parts.length} className='prac-tok-str'>{str}</span>)
+    } else if (num) {
+      parts.push(<span key={parts.length} className='prac-tok-num'>{num}</span>)
+    } else if (typeish) {
+      parts.push(<span key={parts.length} className='prac-tok-type'>{typeish}</span>)
+    } else if (word) {
+      if (JAVA_KEYWORDS.has(word)) {
+        parts.push(<span key={parts.length} className='prac-tok-kw'>{word}</span>)
+      } else {
+        parts.push(word)
+      }
+    } else if (punct) {
+      parts.push(punct)
+    } else if (space) {
+      parts.push(space)
+    } else {
+      parts.push(full)
+    }
+  }
+  return parts
+}
+
+function CodeBlock({ code }) {
+  const [copied, setCopied] = useState(false)
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(code)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    } catch (e) {}
+  }
+  return (
+    <div className='prac-code'>
+      <div className='prac-code__bar'>
+        <span className='prac-code__name'>Solution.java</span>
+        <button
+          className={'prac-copy' + (copied ? ' prac-copy--copied' : '')}
+          onClick={copy}
+        >
+          {copied ? 'Copied!' : 'Copy'}
+        </button>
+      </div>
+      <pre className='prac-code__pre'>
+        <code>{highlightJava(code)}</code>
+      </pre>
+    </div>
+  )
 }
  
 function ProblemView({ problem }) { 
