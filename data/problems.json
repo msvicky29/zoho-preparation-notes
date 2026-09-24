@@ -50,5 +50,44 @@
     "dateAdded": "2026-09-15",
     "lastRevised": null,
     "revisionCount": 0
+  },
+  {
+    "id": "array-to-binary-tree",
+    "title": "ArrayToBinaryTree",
+    "question": "Given a list of integers representing the level order traversal of a complete binary tree, construct the binary tree and return its root. The list is indexed such that for a node at index i, its left child is at 2*i+1 and its right child is at 2*i+2.",
+    "topic": "Tree",
+    "difficulty": "Easy",
+    "platform": "GeeksforGeeks",
+    "code": "class Solution {\n    public Node buildTree(List<Integer> nodes) {\n        // code here\n        int n=nodes.size();\n        if(n==0) return null;\n        \n        Node[] tree=new Node[n];\n        \n        for(int i=0;i<n;i++){\n            tree[i]=new Node(nodes.get(i));\n        }\n        for(int i=0;i<n;i++){\n            int left=2*i+1;\n            int right=2*i+2;\n            if(left<n){\n                tree[i].left=tree[left];\n            }\n            if(right<n){\n                tree[i].right=tree[right];\n            }\n        }\n        \n        return tree[0];\n    }\n}",
+    "filePath": "sample/dsa/ArrayToBinaryTree.java",
+    "dateAdded": "2026-09-24",
+    "lastRevised": null,
+    "revisionCount": 0
+  },
+  {
+    "id": "binary-tree-from-preorder-and-inorder",
+    "title": "BinaryTreeFromPreorderAndInorder",
+    "question": "Given two integer arrays preorder and inorder representing the preorder and inorder traversal of a binary tree, construct and return the binary tree. You may assume there are no duplicate values in the tree.",
+    "topic": "Tree",
+    "difficulty": "Medium",
+    "platform": "LeetCode",
+    "code": "class Solution {\n    Map<Integer,Integer> map = new HashMap<>();\n    int preOrderIndex=0;\n    public TreeNode buildTree(int[] preorder, int[] inorder) {\n        for(int i=0;i<inorder.length;i++){\n            map.put(inorder[i],i);\n        }\n        return build(preorder,0,inorder.length-1);\n    }\n    public TreeNode build(int[] preorder,int left,int right){\n        if(left>right) return null;\n        TreeNode root=new TreeNode(preorder[preOrderIndex++]);\n        int inOrderIndex=map.get(root.val);\n        root.left=build(preorder,left,inOrderIndex-1);\n        root.right=build(preorder,inOrderIndex+1,right);\n        return root;\n    }\n}",
+    "filePath": "sample/dsa/BinaryTreeFromPreorderAndInorder.java",
+    "dateAdded": "2026-09-24",
+    "lastRevised": null,
+    "revisionCount": 0
+  },
+  {
+    "id": "childern-sum",
+    "title": "ChildernSum",
+    "question": "Given the root of a binary tree, check whether it satisfies the children sum property. For every node except leaf nodes, the node's value must equal the sum of its left and right children's values, treating a missing child as 0.",
+    "topic": "Tree",
+    "difficulty": "Easy",
+    "platform": "GeeksforGeeks",
+    "code": "class Solution {\n    public  boolean dfs(Node root){\n        if(root==null){\n            return true;\n        }\n        if(root.left==null && root.right==null){\n            return true;\n        }\n       int left=(root.left!=null)? root.left.data : 0;\n       int right=(root.right!=null)? root.right.data : 0;\n       \n       return (root.data== left+right) && dfs(root.left) && dfs(root.right);\n        \n    }\n    public boolean isSumProperty(Node root) {\n\n        return dfs(root);\n    }\n}",
+    "filePath": "sample/dsa/ChildernSum.java",
+    "dateAdded": "2026-09-24",
+    "lastRevised": null,
+    "revisionCount": 0
   }
 ]
